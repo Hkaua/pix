@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Gerador de PIX</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+body{
+font-family: Arial;
+background:#f4f6f8;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
+width:320px;
+text-align:center;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:10px;
+border:1px solid #ccc;
+border-radius:5px;
+font-size:16px;
+}
+
+button{
+margin-top:12px;
+padding:10px;
+width:100%;
+border:none;
+border-radius:5px;
+background:#2ecc71;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#27ae60;
+}
+
+#qrcode{
+margin-top:20px;
+}
+
+#pixCode{
+margin-top:15px;
+font-size:12px;
+word-break:break-all;
+background:#f1f1f1;
+padding:10px;
+border-radius:5px;
+}
+
+.actions{
+margin-top:10px;
+display:flex;
+gap:5px;
+}
+
+.actions button{
+background:#3498db;
+}
+
+.actions button:hover{
+background:#2980b9;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Gerador de PIX</h2>
+
+<input id="chave" placeholder="Chave PIX">
+
+<input id="valor" placeholder="Valor">
+
+<button onclick="gerarPix()">Gerar PIX</button>
+
+<div id="qrcode"></div>
+
+<div id="pixCode"></div>
+
+<div class="actions">
+<button onclick="copiarPix()">Copiar PIX</button>
+<button onclick="baixarQR()">Baixar QR</button>
+</div>
+
+</div>
+
+<script>
+
+const valorInput = document.getElementById("valor");
+
+valorInput.addEventListener("input",function(){
+
+let numeros = valorInput.value.replace(/\D/g,"");
+
+if(numeros.length === 0){
+valorInput.value="";
+return;
+}
+
+let valor = (parseInt(numeros)/100).toFixed(2);
+
+valor = valor.replace(".",",");
+
+valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g,".");
+
+valorInput.value = "R$ "+valor;
+
+});
+
+function campo(id,valor){
+let tamanho = valor.length.toString().padStart(2,"0");
+return id+tamanho+valor;
+}
+
+function crc16(payload){
+
+let polinomio = 0x1021;
+let resultado = 0xFFFF;
+
+for(let i=0;i<payload.length;i++){
+
+resultado ^= payload.charCodeAt(i)<<8;
+
+for(let j=0;j<8;j++){
+
+resultado = (resultado & 0x8000)
+? (resultado<<1)^polinomio
+: resultado<<1;
+
+resultado &=0xFFFF;
+
+}
+
+}
+
+return resultado.toString(16).toUpperCase().padStart(4,"0");
+
+}
+
+function gerarPix(){
+
+const chave = document.getElementById("chave").value;
+
+let valor = valorInput.value
+.replace("R$","")
+.replace(/\./g,"")
+.replace(",",".")
+.trim();
+
+const nome = "MARINAS MARCADO";
+
+const chavePix =
+campo("00","BR.GOV.BCB.PIX") +
+campo("01",chave);
+
+let payload="";
+
+payload+="000201";
+payload+=campo("26",chavePix);
+payload+="52040000";
+payload+="5303986";
+
+if(valor){
+payload+=campo("54",valor);
+}
+
+payload+="5802BR";
+payload+=campo("59",nome);
+payload+=campo("60","***");
+payload+="62070503***";
+payload+="6304";
+
+payload+=crc16(payload);
+
+document.getElementById("pixCode").innerText=payload;
+
+document.getElementById("qrcode").innerHTML="";
+
+new QRCode(document.getElementById("qrcode"),{
+text:payload,
+width:220,
+height:220
+});
+
+}
+
+function copiarPix(){
+
+const texto = document.getElementById("pixCode").innerText;
+
+navigator.clipboard.writeText(texto);
+
+alert("PIX copiado!");
+
+}
+
+function baixarQR(){
+
+const canvas = document.querySelector("#qrcode canvas");
+
+const link = document.createElement("a");
+
+link.download = "pix-qrcode.png";
+
+link.href = canvas.toDataURL();
+
+link.click();
+
+}
+
+</script>
+
+</body>
+</html>
