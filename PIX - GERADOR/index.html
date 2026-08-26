@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -84,19 +85,19 @@ h2{
 
 
 /* =====================================================
-   MERCADO PAGO
+   BANCO INFINITY
 ===================================================== */
 
-.mercado-pago{
-    border-color:#00a8e8;
+.infinity{
+    border-color:#222;
 }
 
-.mercado-pago:hover,
-.mercado-pago.selecionado{
+.infinity:hover,
+.infinity.selecionado{
 
-    background:#e6f8ff;
+    background:#eeeeee;
 
-    border-color:#00a8e8;
+    border-color:#222;
 }
 
 
@@ -114,23 +115,6 @@ h2{
     background:#e9fff0;
 
     border-color:#21c25e;
-}
-
-
-/* =====================================================
-   NUBANK
-===================================================== */
-
-.nubank{
-    border-color:#820ad1;
-}
-
-.nubank:hover,
-.nubank.selecionado{
-
-    background:#f5e8ff;
-
-    border-color:#820ad1;
 }
 
 
@@ -414,19 +398,15 @@ button:hover{
 
 
 /* =====================================================
-   CORES
+   CORES DOS BANCOS
 ===================================================== */
 
-.mercadoTexto{
-    color:#00a8e8;
+.infinityTexto{
+    color:#222;
 }
 
 .picpayTexto{
     color:#21c25e;
-}
-
-.nubankTexto{
-    color:#820ad1;
 }
 
 
@@ -449,6 +429,12 @@ button:hover{
         padding:15px;
     }
 
+    #qrcodeGrande img,
+    #qrcodeGrande canvas{
+        max-width:100%;
+        height:auto;
+    }
+
 }
 
 </style>
@@ -468,25 +454,28 @@ button:hover{
     <h2>🛍️ Marinas Mercado 🛒</h2>
 
 
-    <!-- INSTITUIÇÕES -->
+    <!-- =================================================
+         INSTITUIÇÕES
+    ================================================== -->
 
     <div class="chaves">
 
 
-        <!-- MERCADO PAGO -->
+        <!-- BANCO INFINITY -->
 
         <div
-            class="chave-card mercado-pago"
+            class="chave-card infinity"
             onclick="selecionarChave(
                 this,
-                '12391057466',
-                'Mercado Pago',
-                'mercadoTexto'
+                '81985533300',
+                'Banco Infinity',
+                'infinityTexto',
+                'telefone'
             )"
         >
 
             <div class="banco">
-                🔵 Mercado Pago
+                ⚫ Banco Infinity
             </div>
 
         </div>
@@ -498,9 +487,10 @@ button:hover{
             class="chave-card picpay"
             onclick="selecionarChave(
                 this,
-                'kaua.hilton@gmail.com',
+                'ramonbarros777@gmail.com',
                 'PicPay',
-                'picpayTexto'
+                'picpayTexto',
+                'email'
             )"
         >
 
@@ -510,29 +500,12 @@ button:hover{
 
         </div>
 
-
-        <!-- NUBANK -->
-
-        <div
-            class="chave-card nubank"
-            onclick="selecionarChave(
-                this,
-                '06806550428',
-                'Nubank',
-                'nubankTexto'
-            )"
-        >
-
-            <div class="banco">
-                🟣 Nubank
-            </div>
-
-        </div>
-
     </div>
 
 
-    <!-- VALOR -->
+    <!-- =================================================
+         VALOR
+    ================================================== -->
 
     <input
         id="valor"
@@ -542,22 +515,24 @@ button:hover{
     >
 
 
-    <!-- BOTÃO -->
+    <!-- =================================================
+         BOTÃO
+    ================================================== -->
 
     <button onclick="gerarPix()">
         Gerar PIX
     </button>
 
 
-    <!-- MENSAGEM -->
+    <!-- =================================================
+         MENSAGEM
+    ================================================== -->
 
     <div
         class="mensagem"
         id="mensagem"
     >
-
         Selecione uma instituição
-
     </div>
 
 </div>
@@ -572,9 +547,7 @@ button:hover{
 
 
     <div class="pixTitulo">
-
         Aponte a câmera para o QR Code
-
     </div>
 
 
@@ -595,13 +568,13 @@ button:hover{
 
 
     <div class="instrucao">
-
         Escaneie o QR Code para realizar o pagamento
-
     </div>
 
 
-    <!-- TIMER -->
+    <!-- =================================================
+         TIMER
+    ================================================== -->
 
     <div class="timer">
 
@@ -609,7 +582,7 @@ button:hover{
             class="timerTexto"
             id="timerTexto"
         >
-            PIX disponível por 45s
+            PIX disponível por 2:00
         </div>
 
 
@@ -625,13 +598,15 @@ button:hover{
     </div>
 
 
+    <!-- =================================================
+         BOTÃO VOLTAR
+    ================================================== -->
+
     <button
         class="btnFechar"
         onclick="resetarPix()"
     >
-
         Voltar
-
     </button>
 
 
@@ -640,7 +615,6 @@ button:hover{
 
 
 <script>
-
 
 /* =====================================================
    VARIÁVEIS
@@ -652,9 +626,18 @@ let bancoSelecionado = "";
 
 let corBanco = "";
 
-let tempoRestante = 45;
+let tipoChave = "";
+
+let tempoRestante = 120;
 
 let timer = null;
+
+
+/* =====================================================
+   TEMPO DO PIX
+===================================================== */
+
+const TEMPO_PIX = 120;
 
 
 /* =====================================================
@@ -668,9 +651,8 @@ document.addEventListener(
         if(event.key === "Enter"){
 
             const telaPix =
-                document.getElementById(
-                    "telaPix"
-                );
+                document.getElementById("telaPix");
+
 
             if(
                 telaPix.style.display !== "flex"
@@ -694,7 +676,8 @@ function selecionarChave(
     elemento,
     chave,
     banco,
-    cor
+    cor,
+    tipo
 ){
 
     /*
@@ -731,10 +714,11 @@ function selecionarChave(
 
     corBanco = cor;
 
+    tipoChave = tipo;
+
 
     /*
-       MENSAGEM AGORA FICA
-       NA COR DO BANCO
+       Atualiza mensagem
     */
 
     const mensagem =
@@ -748,13 +732,12 @@ function selecionarChave(
 
 
     /*
-       Remove classes de cores anteriores
+       Remove cores anteriores
     */
 
     mensagem.classList.remove(
-        "mercadoTexto",
-        "picpayTexto",
-        "nubankTexto"
+        "infinityTexto",
+        "picpayTexto"
     );
 
 
@@ -831,10 +814,11 @@ valorInput.addEventListener(
 
 function campo(id, valor){
 
-    let tamanho =
+    const tamanho =
         valor.length
         .toString()
         .padStart(2,"0");
+
 
     return (
         id +
@@ -851,7 +835,7 @@ function campo(id, valor){
 
 function crc16(payload){
 
-    let polinomio = 0x1021;
+    const polinomio = 0x1021;
 
     let resultado = 0xFFFF;
 
@@ -903,11 +887,66 @@ function crc16(payload){
 
 
 /* =====================================================
+   PREPARAR CHAVE PIX
+===================================================== */
+
+function prepararChavePix(){
+
+    /*
+       Se for telefone, adiciona +55.
+       
+       A chave informada pelo usuário:
+       81985533300
+
+       Será transformada em:
+       +5581985533300
+    */
+
+    if(tipoChave === "telefone"){
+
+        let numero =
+            chaveSelecionada
+            .replace(/\D/g,"");
+
+
+        /*
+           Se já possuir 55 no início,
+           não adiciona novamente.
+        */
+
+        if(
+            numero.startsWith("55")
+        ){
+
+            return "+" + numero;
+
+        }
+
+
+        return "+55" + numero;
+
+    }
+
+
+    /*
+       Para e-mail mantém exatamente
+       como foi cadastrado.
+    */
+
+    return chaveSelecionada;
+
+}
+
+
+/* =====================================================
    GERAR PIX
 ===================================================== */
 
 function gerarPix(){
 
+    /*
+       Verifica instituição
+    */
 
     if(!chaveSelecionada){
 
@@ -920,6 +959,10 @@ function gerarPix(){
     }
 
 
+    /*
+       Pega o valor
+    */
+
     let valor =
         valorInput.value
         .replace("R$","")
@@ -927,6 +970,10 @@ function gerarPix(){
         .replace(",",".")
         .trim();
 
+
+    /*
+       Verifica valor
+    */
 
     if(
         !valor ||
@@ -944,12 +991,24 @@ function gerarPix(){
     }
 
 
+    /*
+       Nome do recebedor
+    */
+
     const nome =
         "MARINAS MERCADO";
 
 
     /*
-       Montagem PIX
+       Prepara a chave
+    */
+
+    const chaveFinal =
+        prepararChavePix();
+
+
+    /*
+       Montagem do campo 26
     */
 
     const chavePix =
@@ -963,56 +1022,104 @@ function gerarPix(){
 
         campo(
             "01",
-            chaveSelecionada
+            chaveFinal
         );
 
+
+    /*
+       Montagem do payload
+    */
 
     let payload = "";
 
 
+    /*
+       Payload Format Indicator
+    */
+
     payload += "000201";
+
+
+    /*
+       Merchant Account Information
+    */
 
     payload += campo(
         "26",
         chavePix
     );
 
+
+    /*
+       Merchant Category Code
+    */
+
     payload += "52040000";
 
+
+    /*
+       Currency - BRL
+    */
+
     payload += "5303986";
+
+
+    /*
+       Valor
+    */
 
     payload += campo(
         "54",
         valor
     );
 
+
+    /*
+       País
+    */
+
     payload += "5802BR";
+
+
+    /*
+       Nome do recebedor
+    */
 
     payload += campo(
         "59",
         nome
     );
 
+
+    /*
+       Cidade
+    */
+
     payload += campo(
         "60",
         "***"
     );
 
-    payload += "62070503***";
 
-    payload += "6304";
+    /*
+       TXID
+    */
+
+    payload += "62070503***";
 
 
     /*
        CRC
     */
 
-    payload +=
-        crc16(payload);
+    payload += "6304";
+
+
+    payload += crc16(payload);
 
 
     /*
-       Elementos
+       Elementos da tela
     */
 
     const telaPix =
@@ -1066,11 +1173,11 @@ function gerarPix(){
 
     chaveTela.innerText =
         "Chave: " +
-        chaveSelecionada;
+        chaveFinal;
 
 
     /*
-       Limpa QR
+       Limpa QR anterior
     */
 
     document.getElementById(
@@ -1079,7 +1186,7 @@ function gerarPix(){
 
 
     /*
-       Gera QR
+       Gera QR Code
     */
 
     new QRCode(
@@ -1091,7 +1198,8 @@ function gerarPix(){
         {
             text:payload,
             width:300,
-            height:300
+            height:300,
+            correctLevel:QRCode.CorrectLevel.M
         }
 
     );
@@ -1106,7 +1214,7 @@ function gerarPix(){
 
 
     /*
-       Timer
+       Inicia timer
     */
 
     iniciarTimer();
@@ -1115,14 +1223,51 @@ function gerarPix(){
 
 
 /* =====================================================
-   TIMER
+   FORMATAR TEMPO
+===================================================== */
+
+function formatarTempo(segundos){
+
+    const minutos =
+        Math.floor(
+            segundos / 60
+        );
+
+
+    const segundosRestantes =
+        segundos % 60;
+
+
+    return (
+        minutos +
+        ":" +
+        segundosRestantes
+            .toString()
+            .padStart(2,"0")
+    );
+
+}
+
+
+/* =====================================================
+   TIMER — 2 MINUTOS
 ===================================================== */
 
 function iniciarTimer(){
 
+    /*
+       Cancela timer anterior
+    */
+
     clearInterval(timer);
 
-    tempoRestante = 45;
+
+    /*
+       Volta para 120 segundos
+    */
+
+    tempoRestante =
+        TEMPO_PIX;
 
 
     const texto =
@@ -1137,13 +1282,28 @@ function iniciarTimer(){
         );
 
 
+    /*
+       Barra cheia
+    */
+
     progresso.style.width =
         "100%";
 
 
-    texto.innerText =
-        "PIX disponível por 45s";
+    /*
+       Texto inicial
+    */
 
+    texto.innerText =
+        "PIX disponível por " +
+        formatarTempo(
+            tempoRestante
+        );
+
+
+    /*
+       Inicia contagem
+    */
 
     timer =
         setInterval(
@@ -1152,19 +1312,9 @@ function iniciarTimer(){
                 tempoRestante--;
 
 
-                texto.innerText =
-                    "PIX disponível por " +
-                    tempoRestante +
-                    "s";
-
-
-                progresso.style.width =
-                    (
-                        tempoRestante /
-                        45 *
-                        100
-                    ) + "%";
-
+                /*
+                   Quando chegar a zero
+                */
 
                 if(
                     tempoRestante <= 0
@@ -1172,9 +1322,56 @@ function iniciarTimer(){
 
                     clearInterval(timer);
 
-                    resetarPix();
+
+                    texto.innerText =
+                        "PIX expirado";
+
+
+                    progresso.style.width =
+                        "0%";
+
+
+                    /*
+                       Fecha a tela
+                       após meio segundo
+                    */
+
+                    setTimeout(
+                        function(){
+
+                            resetarPix();
+
+                        },
+                        500
+                    );
+
+
+                    return;
 
                 }
+
+
+                /*
+                   Atualiza tempo
+                */
+
+                texto.innerText =
+                    "PIX disponível por " +
+                    formatarTempo(
+                        tempoRestante
+                    );
+
+
+                /*
+                   Atualiza barra
+                */
+
+                progresso.style.width =
+                    (
+                        tempoRestante /
+                        TEMPO_PIX *
+                        100
+                    ) + "%";
 
             },
             1000
@@ -1188,6 +1385,10 @@ function iniciarTimer(){
 ===================================================== */
 
 function resetarPix(){
+
+    /*
+       Para timer
+    */
 
     clearInterval(timer);
 
@@ -1254,6 +1455,8 @@ function resetarPix(){
 
     corBanco = "";
 
+    tipoChave = "";
+
 
     /*
        Reseta mensagem
@@ -1270,15 +1473,18 @@ function resetarPix(){
 
 
     mensagem.classList.remove(
-        "mercadoTexto",
-        "picpayTexto",
-        "nubankTexto"
+        "infinityTexto",
+        "picpayTexto"
     );
 
 
     /*
        Reseta timer
     */
+
+    tempoRestante =
+        TEMPO_PIX;
+
 
     document.getElementById(
         "timerProgresso"
@@ -1289,7 +1495,7 @@ function resetarPix(){
     document.getElementById(
         "timerTexto"
     ).innerText =
-        "PIX disponível por 45s";
+        "PIX disponível por 2:00";
 
 }
 
@@ -1298,3 +1504,4 @@ function resetarPix(){
 </body>
 
 </html>
+```
