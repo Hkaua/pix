@@ -1,0 +1,1507 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MARINAS MERCADO</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+
+/* =====================================================
+   CONFIGURAÇÕES GERAIS
+===================================================== */
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, sans-serif;
+    background:#f4f6f8;
+    margin:0;
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.container{
+    background:white;
+    width:380px;
+    padding:30px;
+    border-radius:15px;
+
+    box-shadow:0 5px 25px rgba(0,0,0,0.10);
+
+    text-align:center;
+}
+
+h2{
+    margin-top:0;
+    margin-bottom:25px;
+}
+
+
+/* =====================================================
+   INSTITUIÇÕES PIX
+===================================================== */
+
+.chaves{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.chave-card{
+
+    width:100%;
+
+    border:2px solid transparent;
+
+    border-radius:10px;
+
+    padding:16px;
+
+    cursor:pointer;
+
+    text-align:center;
+
+    transition:0.2s;
+
+    background:#f7f7f7;
+}
+
+.chave-card:hover{
+    transform:translateY(-2px);
+}
+
+
+/* =====================================================
+   BANCO INFINITY
+===================================================== */
+
+.infinity{
+    border-color:#222;
+}
+
+.infinity:hover,
+.infinity.selecionado{
+
+    background:#eeeeee;
+
+    border-color:#222;
+}
+
+
+/* =====================================================
+   PICPAY
+===================================================== */
+
+.picpay{
+    border-color:#21c25e;
+}
+
+.picpay:hover,
+.picpay.selecionado{
+
+    background:#e9fff0;
+
+    border-color:#21c25e;
+}
+
+
+/* =====================================================
+   NOME DO BANCO
+===================================================== */
+
+.banco{
+
+    font-size:18px;
+
+    font-weight:bold;
+
+}
+
+
+/* =====================================================
+   INPUT
+===================================================== */
+
+input{
+
+    width:100%;
+
+    padding:12px;
+
+    margin-top:10px;
+
+    border:1px solid #ccc;
+
+    border-radius:7px;
+
+    font-size:16px;
+
+    outline:none;
+}
+
+input:focus{
+    border-color:#3498db;
+}
+
+
+/* =====================================================
+   BOTÃO
+===================================================== */
+
+button{
+
+    margin-top:12px;
+
+    padding:12px;
+
+    width:100%;
+
+    border:none;
+
+    border-radius:7px;
+
+    background:#2ecc71;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+    transition:0.2s;
+}
+
+button:hover{
+    background:#27ae60;
+}
+
+
+/* =====================================================
+   MENSAGEM DE SELEÇÃO
+===================================================== */
+
+.mensagem{
+
+    margin-top:15px;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+    transition:0.2s;
+}
+
+
+/* =====================================================
+   TELA DO PIX
+===================================================== */
+
+#telaPix{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:#ffffff;
+
+    z-index:9999;
+
+    display:none;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    padding:20px;
+}
+
+
+/* =====================================================
+   INFORMAÇÕES PIX
+===================================================== */
+
+.pixTitulo{
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    margin-bottom:10px;
+
+    color:#222;
+}
+
+#pixBanco{
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    margin-bottom:5px;
+}
+
+#pixValor{
+
+    font-size:34px;
+
+    font-weight:bold;
+
+    margin-bottom:25px;
+
+    color:#222;
+}
+
+
+/* =====================================================
+   QR CODE
+===================================================== */
+
+#qrcodeGrande{
+
+    background:white;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    box-shadow:
+        0 5px 30px rgba(0,0,0,0.15);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+}
+
+
+/* =====================================================
+   CHAVE PIX DISCRETA
+===================================================== */
+
+#pixChave{
+
+    margin-top:12px;
+
+    font-size:12px;
+
+    color:#999;
+
+    font-weight:normal;
+
+    word-break:break-all;
+
+    max-width:320px;
+}
+
+
+/* =====================================================
+   INSTRUÇÃO
+===================================================== */
+
+.instrucao{
+
+    margin-top:20px;
+
+    font-size:16px;
+
+    color:#555;
+}
+
+
+/* =====================================================
+   TIMER
+===================================================== */
+
+.timer{
+
+    width:320px;
+
+    max-width:90%;
+
+    margin-top:25px;
+}
+
+.timerTexto{
+
+    font-size:14px;
+
+    color:#555;
+
+    margin-bottom:7px;
+}
+
+.timerBarra{
+
+    width:100%;
+
+    height:10px;
+
+    background:#e5e5e5;
+
+    border-radius:20px;
+
+    overflow:hidden;
+}
+
+.timerProgresso{
+
+    width:100%;
+
+    height:100%;
+
+    background:#2ecc71;
+
+    border-radius:20px;
+
+    transition:width 1s linear;
+}
+
+
+/* =====================================================
+   BOTÃO VOLTAR
+===================================================== */
+
+.btnFechar{
+
+    width:200px;
+
+    margin-top:20px;
+
+    background:#777;
+}
+
+.btnFechar:hover{
+    background:#555;
+}
+
+
+/* =====================================================
+   CORES DOS BANCOS
+===================================================== */
+
+.infinityTexto{
+    color:#222;
+}
+
+.picpayTexto{
+    color:#21c25e;
+}
+
+
+/* =====================================================
+   RESPONSIVIDADE
+===================================================== */
+
+@media(max-width:500px){
+
+    .container{
+        width:92%;
+        padding:20px;
+    }
+
+    #pixValor{
+        font-size:28px;
+    }
+
+    #qrcodeGrande{
+        padding:15px;
+    }
+
+    #qrcodeGrande img,
+    #qrcodeGrande canvas{
+        max-width:100%;
+        height:auto;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     TELA PRINCIPAL
+===================================================== -->
+
+<div class="container">
+
+    <h2>🛍️ Marinas Mercado 🛒</h2>
+
+
+    <!-- =================================================
+         INSTITUIÇÕES
+    ================================================== -->
+
+    <div class="chaves">
+
+
+        <!-- BANCO INFINITY -->
+
+        <div
+            class="chave-card infinity"
+            onclick="selecionarChave(
+                this,
+                '81985533300',
+                'Banco Infinity',
+                'infinityTexto',
+                'telefone'
+            )"
+        >
+
+            <div class="banco">
+                ⚫ Banco Infinity
+            </div>
+
+        </div>
+
+
+        <!-- PICPAY -->
+
+        <div
+            class="chave-card picpay"
+            onclick="selecionarChave(
+                this,
+                'ramonbarros777@gmail.com',
+                'PicPay',
+                'picpayTexto',
+                'email'
+            )"
+        >
+
+            <div class="banco">
+                🟢 PicPay
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         VALOR
+    ================================================== -->
+
+    <input
+        id="valor"
+        placeholder="Valor"
+        inputmode="decimal"
+        autocomplete="off"
+    >
+
+
+    <!-- =================================================
+         BOTÃO
+    ================================================== -->
+
+    <button onclick="gerarPix()">
+        Gerar PIX
+    </button>
+
+
+    <!-- =================================================
+         MENSAGEM
+    ================================================== -->
+
+    <div
+        class="mensagem"
+        id="mensagem"
+    >
+        Selecione uma instituição
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     TELA DO QR CODE
+===================================================== -->
+
+<div id="telaPix">
+
+
+    <div class="pixTitulo">
+        Aponte a câmera para o QR Code
+    </div>
+
+
+    <div id="pixBanco">
+        PIX
+    </div>
+
+
+    <div id="pixValor">
+        R$ 0,00
+    </div>
+
+
+    <div id="qrcodeGrande"></div>
+
+
+    <div id="pixChave"></div>
+
+
+    <div class="instrucao">
+        Escaneie o QR Code para realizar o pagamento
+    </div>
+
+
+    <!-- =================================================
+         TIMER
+    ================================================== -->
+
+    <div class="timer">
+
+        <div
+            class="timerTexto"
+            id="timerTexto"
+        >
+            PIX disponível por 2:00
+        </div>
+
+
+        <div class="timerBarra">
+
+            <div
+                class="timerProgresso"
+                id="timerProgresso"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         BOTÃO VOLTAR
+    ================================================== -->
+
+    <button
+        class="btnFechar"
+        onclick="resetarPix()"
+    >
+        Voltar
+    </button>
+
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   VARIÁVEIS
+===================================================== */
+
+let chaveSelecionada = "";
+
+let bancoSelecionado = "";
+
+let corBanco = "";
+
+let tipoChave = "";
+
+let tempoRestante = 120;
+
+let timer = null;
+
+
+/* =====================================================
+   TEMPO DO PIX
+===================================================== */
+
+const TEMPO_PIX = 120;
+
+
+/* =====================================================
+   ENTER PARA GERAR PIX
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            const telaPix =
+                document.getElementById("telaPix");
+
+
+            if(
+                telaPix.style.display !== "flex"
+            ){
+
+                gerarPix();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   SELECIONAR INSTITUIÇÃO
+===================================================== */
+
+function selecionarChave(
+    elemento,
+    chave,
+    banco,
+    cor,
+    tipo
+){
+
+    /*
+       Remove seleção anterior
+    */
+
+    document
+        .querySelectorAll(".chave-card")
+        .forEach(card => {
+
+            card.classList.remove(
+                "selecionado"
+            );
+
+        });
+
+
+    /*
+       Destaca instituição
+    */
+
+    elemento.classList.add(
+        "selecionado"
+    );
+
+
+    /*
+       Guarda informações
+    */
+
+    chaveSelecionada = chave;
+
+    bancoSelecionado = banco;
+
+    corBanco = cor;
+
+    tipoChave = tipo;
+
+
+    /*
+       Atualiza mensagem
+    */
+
+    const mensagem =
+        document.getElementById(
+            "mensagem"
+        );
+
+
+    mensagem.innerText =
+        banco + " selecionado ✓";
+
+
+    /*
+       Remove cores anteriores
+    */
+
+    mensagem.classList.remove(
+        "infinityTexto",
+        "picpayTexto"
+    );
+
+
+    /*
+       Adiciona a cor correspondente
+    */
+
+    mensagem.classList.add(
+        cor
+    );
+
+}
+
+
+/* =====================================================
+   FORMATAÇÃO DO VALOR
+===================================================== */
+
+const valorInput =
+    document.getElementById("valor");
+
+
+valorInput.addEventListener(
+    "input",
+    function(){
+
+        let numeros =
+            valorInput.value
+            .replace(/\D/g,"");
+
+
+        if(
+            numeros.length === 0
+        ){
+
+            valorInput.value = "";
+
+            return;
+
+        }
+
+
+        let valor =
+            (
+                parseInt(numeros) /
+                100
+            ).toFixed(2);
+
+
+        valor =
+            valor.replace(
+                ".",
+                ","
+            );
+
+
+        valor =
+            valor.replace(
+                /\B(?=(\d{3})+(?!\d))/g,
+                "."
+            );
+
+
+        valorInput.value =
+            "R$ " + valor;
+
+    }
+);
+
+
+/* =====================================================
+   CAMPO PIX
+===================================================== */
+
+function campo(id, valor){
+
+    const tamanho =
+        valor.length
+        .toString()
+        .padStart(2,"0");
+
+
+    return (
+        id +
+        tamanho +
+        valor
+    );
+
+}
+
+
+/* =====================================================
+   CRC16
+===================================================== */
+
+function crc16(payload){
+
+    const polinomio = 0x1021;
+
+    let resultado = 0xFFFF;
+
+
+    for(
+        let i = 0;
+        i < payload.length;
+        i++
+    ){
+
+        resultado ^=
+            payload.charCodeAt(i)
+            << 8;
+
+
+        for(
+            let j = 0;
+            j < 8;
+            j++
+        ){
+
+            resultado =
+                (resultado & 0x8000)
+
+                ?
+
+                (resultado << 1)
+                ^ polinomio
+
+                :
+
+                resultado << 1;
+
+
+            resultado &=
+                0xFFFF;
+
+        }
+
+    }
+
+
+    return resultado
+        .toString(16)
+        .toUpperCase()
+        .padStart(4,"0");
+
+}
+
+
+/* =====================================================
+   PREPARAR CHAVE PIX
+===================================================== */
+
+function prepararChavePix(){
+
+    /*
+       Se for telefone, adiciona +55.
+       
+       A chave informada pelo usuário:
+       81985533300
+
+       Será transformada em:
+       +5581985533300
+    */
+
+    if(tipoChave === "telefone"){
+
+        let numero =
+            chaveSelecionada
+            .replace(/\D/g,"");
+
+
+        /*
+           Se já possuir 55 no início,
+           não adiciona novamente.
+        */
+
+        if(
+            numero.startsWith("55")
+        ){
+
+            return "+" + numero;
+
+        }
+
+
+        return "+55" + numero;
+
+    }
+
+
+    /*
+       Para e-mail mantém exatamente
+       como foi cadastrado.
+    */
+
+    return chaveSelecionada;
+
+}
+
+
+/* =====================================================
+   GERAR PIX
+===================================================== */
+
+function gerarPix(){
+
+    /*
+       Verifica instituição
+    */
+
+    if(!chaveSelecionada){
+
+        alert(
+            "Selecione uma instituição de pagamento."
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Pega o valor
+    */
+
+    let valor =
+        valorInput.value
+        .replace("R$","")
+        .replace(/\./g,"")
+        .replace(",",".")
+        .trim();
+
+
+    /*
+       Verifica valor
+    */
+
+    if(
+        !valor ||
+        parseFloat(valor) <= 0
+    ){
+
+        alert(
+            "Digite um valor válido."
+        );
+
+        valorInput.focus();
+
+        return;
+
+    }
+
+
+    /*
+       Nome do recebedor
+    */
+
+    const nome =
+        "MARINAS MERCADO";
+
+
+    /*
+       Prepara a chave
+    */
+
+    const chaveFinal =
+        prepararChavePix();
+
+
+    /*
+       Montagem do campo 26
+    */
+
+    const chavePix =
+
+        campo(
+            "00",
+            "BR.GOV.BCB.PIX"
+        )
+
+        +
+
+        campo(
+            "01",
+            chaveFinal
+        );
+
+
+    /*
+       Montagem do payload
+    */
+
+    let payload = "";
+
+
+    /*
+       Payload Format Indicator
+    */
+
+    payload += "000201";
+
+
+    /*
+       Merchant Account Information
+    */
+
+    payload += campo(
+        "26",
+        chavePix
+    );
+
+
+    /*
+       Merchant Category Code
+    */
+
+    payload += "52040000";
+
+
+    /*
+       Currency - BRL
+    */
+
+    payload += "5303986";
+
+
+    /*
+       Valor
+    */
+
+    payload += campo(
+        "54",
+        valor
+    );
+
+
+    /*
+       País
+    */
+
+    payload += "5802BR";
+
+
+    /*
+       Nome do recebedor
+    */
+
+    payload += campo(
+        "59",
+        nome
+    );
+
+
+    /*
+       Cidade
+    */
+
+    payload += campo(
+        "60",
+        "***"
+    );
+
+
+    /*
+       TXID
+    */
+
+    payload += "62070503***";
+
+
+    /*
+       CRC
+    */
+
+    payload += "6304";
+
+
+    payload += crc16(payload);
+
+
+    /*
+       Elementos da tela
+    */
+
+    const telaPix =
+        document.getElementById(
+            "telaPix"
+        );
+
+
+    const banco =
+        document.getElementById(
+            "pixBanco"
+        );
+
+
+    const valorTela =
+        document.getElementById(
+            "pixValor"
+        );
+
+
+    const chaveTela =
+        document.getElementById(
+            "pixChave"
+        );
+
+
+    /*
+       Banco
+    */
+
+    banco.innerText =
+        "PIX • " +
+        bancoSelecionado;
+
+
+    banco.className =
+        corBanco;
+
+
+    /*
+       Valor
+    */
+
+    valorTela.innerText =
+        valorInput.value;
+
+
+    /*
+       Chave discreta
+    */
+
+    chaveTela.innerText =
+        "Chave: " +
+        chaveFinal;
+
+
+    /*
+       Limpa QR anterior
+    */
+
+    document.getElementById(
+        "qrcodeGrande"
+    ).innerHTML = "";
+
+
+    /*
+       Gera QR Code
+    */
+
+    new QRCode(
+
+        document.getElementById(
+            "qrcodeGrande"
+        ),
+
+        {
+            text:payload,
+            width:300,
+            height:300,
+            correctLevel:QRCode.CorrectLevel.M
+        }
+
+    );
+
+
+    /*
+       Mostra tela
+    */
+
+    telaPix.style.display =
+        "flex";
+
+
+    /*
+       Inicia timer
+    */
+
+    iniciarTimer();
+
+}
+
+
+/* =====================================================
+   FORMATAR TEMPO
+===================================================== */
+
+function formatarTempo(segundos){
+
+    const minutos =
+        Math.floor(
+            segundos / 60
+        );
+
+
+    const segundosRestantes =
+        segundos % 60;
+
+
+    return (
+        minutos +
+        ":" +
+        segundosRestantes
+            .toString()
+            .padStart(2,"0")
+    );
+
+}
+
+
+/* =====================================================
+   TIMER — 2 MINUTOS
+===================================================== */
+
+function iniciarTimer(){
+
+    /*
+       Cancela timer anterior
+    */
+
+    clearInterval(timer);
+
+
+    /*
+       Volta para 120 segundos
+    */
+
+    tempoRestante =
+        TEMPO_PIX;
+
+
+    const texto =
+        document.getElementById(
+            "timerTexto"
+        );
+
+
+    const progresso =
+        document.getElementById(
+            "timerProgresso"
+        );
+
+
+    /*
+       Barra cheia
+    */
+
+    progresso.style.width =
+        "100%";
+
+
+    /*
+       Texto inicial
+    */
+
+    texto.innerText =
+        "PIX disponível por " +
+        formatarTempo(
+            tempoRestante
+        );
+
+
+    /*
+       Inicia contagem
+    */
+
+    timer =
+        setInterval(
+            function(){
+
+                tempoRestante--;
+
+
+                /*
+                   Quando chegar a zero
+                */
+
+                if(
+                    tempoRestante <= 0
+                ){
+
+                    clearInterval(timer);
+
+
+                    texto.innerText =
+                        "PIX expirado";
+
+
+                    progresso.style.width =
+                        "0%";
+
+
+                    /*
+                       Fecha a tela
+                       após meio segundo
+                    */
+
+                    setTimeout(
+                        function(){
+
+                            resetarPix();
+
+                        },
+                        500
+                    );
+
+
+                    return;
+
+                }
+
+
+                /*
+                   Atualiza tempo
+                */
+
+                texto.innerText =
+                    "PIX disponível por " +
+                    formatarTempo(
+                        tempoRestante
+                    );
+
+
+                /*
+                   Atualiza barra
+                */
+
+                progresso.style.width =
+                    (
+                        tempoRestante /
+                        TEMPO_PIX *
+                        100
+                    ) + "%";
+
+            },
+            1000
+        );
+
+}
+
+
+/* =====================================================
+   RESETAR
+===================================================== */
+
+function resetarPix(){
+
+    /*
+       Para timer
+    */
+
+    clearInterval(timer);
+
+
+    /*
+       Fecha tela
+    */
+
+    document.getElementById(
+        "telaPix"
+    ).style.display =
+        "none";
+
+
+    /*
+       Limpa QR
+    */
+
+    document.getElementById(
+        "qrcodeGrande"
+    ).innerHTML = "";
+
+
+    /*
+       Limpa chave
+    */
+
+    document.getElementById(
+        "pixChave"
+    ).innerText = "";
+
+
+    /*
+       Limpa valor
+    */
+
+    document.getElementById(
+        "valor"
+    ).value = "";
+
+
+    /*
+       Remove seleção
+    */
+
+    document
+        .querySelectorAll(".chave-card")
+        .forEach(card => {
+
+            card.classList.remove(
+                "selecionado"
+            );
+
+        });
+
+
+    /*
+       Limpa variáveis
+    */
+
+    chaveSelecionada = "";
+
+    bancoSelecionado = "";
+
+    corBanco = "";
+
+    tipoChave = "";
+
+
+    /*
+       Reseta mensagem
+    */
+
+    const mensagem =
+        document.getElementById(
+            "mensagem"
+        );
+
+
+    mensagem.innerText =
+        "Selecione uma instituição";
+
+
+    mensagem.classList.remove(
+        "infinityTexto",
+        "picpayTexto"
+    );
+
+
+    /*
+       Reseta timer
+    */
+
+    tempoRestante =
+        TEMPO_PIX;
+
+
+    document.getElementById(
+        "timerProgresso"
+    ).style.width =
+        "100%";
+
+
+    document.getElementById(
+        "timerTexto"
+    ).innerText =
+        "PIX disponível por 2:00";
+
+}
+
+</script>
+
+</body>
+
+</html>
+```
