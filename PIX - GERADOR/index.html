@@ -1,1507 +1,284 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>MARINAS MERCADO</title>
-
+<title>MARINAS MERCADO • PIX</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
 <style>
-
-/* =====================================================
-   CONFIGURAÇÕES GERAIS
-===================================================== */
-
-*{
-    box-sizing:border-box;
-}
-
-body{
-    font-family:Arial, sans-serif;
-    background:#f4f6f8;
-    margin:0;
-    min-height:100vh;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-.container{
-    background:white;
-    width:380px;
-    padding:30px;
-    border-radius:15px;
-
-    box-shadow:0 5px 25px rgba(0,0,0,0.10);
-
-    text-align:center;
-}
-
-h2{
-    margin-top:0;
-    margin-bottom:25px;
-}
-
-
-/* =====================================================
-   INSTITUIÇÕES PIX
-===================================================== */
-
-.chaves{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    margin-bottom:20px;
-}
-
-.chave-card{
-
-    width:100%;
-
-    border:2px solid transparent;
-
-    border-radius:10px;
-
-    padding:16px;
-
-    cursor:pointer;
-
-    text-align:center;
-
-    transition:0.2s;
-
-    background:#f7f7f7;
-}
-
-.chave-card:hover{
-    transform:translateY(-2px);
-}
-
-
-/* =====================================================
-   BANCO INFINITY
-===================================================== */
-
-.infinity{
-    border-color:#222;
-}
-
-.infinity:hover,
-.infinity.selecionado{
-
-    background:#eeeeee;
-
-    border-color:#222;
-}
-
-
-/* =====================================================
-   PICPAY
-===================================================== */
-
-.picpay{
-    border-color:#21c25e;
-}
-
-.picpay:hover,
-.picpay.selecionado{
-
-    background:#e9fff0;
-
-    border-color:#21c25e;
-}
-
-
-/* =====================================================
-   NOME DO BANCO
-===================================================== */
-
-.banco{
-
-    font-size:18px;
-
-    font-weight:bold;
-
-}
-
-
-/* =====================================================
-   INPUT
-===================================================== */
-
-input{
-
-    width:100%;
-
-    padding:12px;
-
-    margin-top:10px;
-
-    border:1px solid #ccc;
-
-    border-radius:7px;
-
-    font-size:16px;
-
-    outline:none;
-}
-
-input:focus{
-    border-color:#3498db;
-}
-
-
-/* =====================================================
-   BOTÃO
-===================================================== */
-
-button{
-
-    margin-top:12px;
-
-    padding:12px;
-
-    width:100%;
-
-    border:none;
-
-    border-radius:7px;
-
-    background:#2ecc71;
-
-    color:white;
-
-    font-size:16px;
-
-    cursor:pointer;
-
-    transition:0.2s;
-}
-
-button:hover{
-    background:#27ae60;
-}
-
-
-/* =====================================================
-   MENSAGEM DE SELEÇÃO
-===================================================== */
-
-.mensagem{
-
-    margin-top:15px;
-
-    font-size:14px;
-
-    font-weight:bold;
-
-    transition:0.2s;
-}
-
-
-/* =====================================================
-   TELA DO PIX
-===================================================== */
-
-#telaPix{
-
-    position:fixed;
-
-    top:0;
-    left:0;
-
-    width:100%;
-    height:100%;
-
-    background:#ffffff;
-
-    z-index:9999;
-
-    display:none;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    text-align:center;
-
-    padding:20px;
-}
-
-
-/* =====================================================
-   INFORMAÇÕES PIX
-===================================================== */
-
-.pixTitulo{
-
-    font-size:22px;
-
-    font-weight:bold;
-
-    margin-bottom:10px;
-
-    color:#222;
-}
-
-#pixBanco{
-
-    font-size:18px;
-
-    font-weight:bold;
-
-    margin-bottom:5px;
-}
-
-#pixValor{
-
-    font-size:34px;
-
-    font-weight:bold;
-
-    margin-bottom:25px;
-
-    color:#222;
-}
-
-
-/* =====================================================
-   QR CODE
-===================================================== */
-
-#qrcodeGrande{
-
-    background:white;
-
-    padding:20px;
-
-    border-radius:15px;
-
-    box-shadow:
-        0 5px 30px rgba(0,0,0,0.15);
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-}
-
-
-/* =====================================================
-   CHAVE PIX DISCRETA
-===================================================== */
-
-#pixChave{
-
-    margin-top:12px;
-
-    font-size:12px;
-
-    color:#999;
-
-    font-weight:normal;
-
-    word-break:break-all;
-
-    max-width:320px;
-}
-
-
-/* =====================================================
-   INSTRUÇÃO
-===================================================== */
-
-.instrucao{
-
-    margin-top:20px;
-
-    font-size:16px;
-
-    color:#555;
-}
-
-
-/* =====================================================
-   TIMER
-===================================================== */
-
-.timer{
-
-    width:320px;
-
-    max-width:90%;
-
-    margin-top:25px;
-}
-
-.timerTexto{
-
-    font-size:14px;
-
-    color:#555;
-
-    margin-bottom:7px;
-}
-
-.timerBarra{
-
-    width:100%;
-
-    height:10px;
-
-    background:#e5e5e5;
-
-    border-radius:20px;
-
-    overflow:hidden;
-}
-
-.timerProgresso{
-
-    width:100%;
-
-    height:100%;
-
-    background:#2ecc71;
-
-    border-radius:20px;
-
-    transition:width 1s linear;
-}
-
-
-/* =====================================================
-   BOTÃO VOLTAR
-===================================================== */
-
-.btnFechar{
-
-    width:200px;
-
-    margin-top:20px;
-
-    background:#777;
-}
-
-.btnFechar:hover{
-    background:#555;
-}
-
-
-/* =====================================================
-   CORES DOS BANCOS
-===================================================== */
-
-.infinityTexto{
-    color:#222;
-}
-
-.picpayTexto{
-    color:#21c25e;
-}
-
-
-/* =====================================================
-   RESPONSIVIDADE
-===================================================== */
-
-@media(max-width:500px){
-
-    .container{
-        width:92%;
-        padding:20px;
-    }
-
-    #pixValor{
-        font-size:28px;
-    }
-
-    #qrcodeGrande{
-        padding:15px;
-    }
-
-    #qrcodeGrande img,
-    #qrcodeGrande canvas{
-        max-width:100%;
-        height:auto;
-    }
-
-}
-
+*{box-sizing:border-box}
+:root{--accent:#1f8f6b;--accent-dark:#176b51;--accent-light:#e9f7f2;--text:#17211d;--muted:#718078}
+html,body{margin:0;min-height:100%}
+body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 15% 15%,rgba(31,143,107,.10),transparent 28%),radial-gradient(circle at 85% 80%,rgba(31,143,107,.08),transparent 30%),#f3f7f5;color:var(--text);overflow:hidden}
+.background{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.orb{position:absolute;border-radius:50%;filter:blur(2px);opacity:.16;background:rgba(31,143,107,.28);animation:flutuar 14s ease-in-out infinite}
+.orb:nth-child(1){width:190px;height:190px;left:-70px;top:12%}
+.orb:nth-child(2){width:250px;height:250px;right:-100px;top:55%;animation-delay:-5s;animation-duration:18s}
+.orb:nth-child(3){width:120px;height:120px;left:60%;top:-50px;animation-delay:-8s;animation-duration:16s}
+@keyframes flutuar{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(18px,-20px,0) scale(1.06)}}
+.main{position:relative;z-index:1;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.container{width:390px;max-width:100%;padding:34px 30px 30px;background:rgba(255,255,255,.90);border:1px solid rgba(255,255,255,.8);border-radius:24px;box-shadow:0 20px 60px rgba(24,50,40,.12),0 4px 15px rgba(24,50,40,.05);backdrop-filter:blur(14px);animation:entrar .7s ease both}
+@keyframes entrar{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.logo{width:58px;height:58px;margin:0 auto 15px;display:flex;align-items:center;justify-content:center;border-radius:18px;background:var(--accent-light);color:var(--accent);font-size:25px;font-weight:800;box-shadow:0 8px 20px rgba(31,143,107,.10)}
+h1{margin:0;text-align:center;font-size:24px;letter-spacing:-.5px}
+.subtitle{margin:8px 0 28px;text-align:center;color:var(--muted);font-size:14px}
+.bank-card{position:relative;width:100%;padding:18px;border:2px solid var(--accent);border-radius:16px;background:linear-gradient(135deg,#f8fffc,#edf9f4);cursor:pointer;text-align:left;transition:.25s ease;box-shadow:0 8px 25px rgba(31,143,107,.08)}
+.bank-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(31,143,107,.14)}
+.bank-card.selecionado{box-shadow:0 0 0 4px rgba(31,143,107,.08),0 12px 30px rgba(31,143,107,.13)}
+.bank-top{display:flex;align-items:center;gap:13px}
+.bank-icon{width:45px;height:45px;border-radius:13px;background:var(--accent);color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;box-shadow:0 7px 16px rgba(31,143,107,.22)}
+.bank-name{font-size:17px;font-weight:700}
+.bank-status{margin-top:3px;font-size:12px;color:var(--muted)}
+.selected-check{position:absolute;right:16px;top:16px;width:25px;height:25px;border-radius:50%;background:var(--accent);color:white;display:flex;align-items:center;justify-content:center;font-size:13px}
+.field{margin-top:20px}
+label{display:block;margin-bottom:7px;font-size:13px;font-weight:700;color:#46534d}
+input{width:100%;height:52px;padding:0 15px;border:1px solid #d8e0dc;border-radius:13px;background:#fff;color:var(--text);font-size:16px;outline:none;transition:.2s}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(31,143,107,.08)}
+.generate{margin-top:18px;width:100%;height:52px;border:0;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:white;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 10px 22px rgba(31,143,107,.20);transition:.2s}
+.generate:hover{transform:translateY(-1px);box-shadow:0 13px 27px rgba(31,143,107,.26)}
+.generate:active{transform:translateY(1px)}
+.mensagem{min-height:18px;margin-top:13px;text-align:center;font-size:13px;font-weight:700;color:var(--accent)}
+#telaPix{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px;background:radial-gradient(circle at 20% 10%,rgba(31,143,107,.09),transparent 25%),radial-gradient(circle at 85% 90%,rgba(31,143,107,.07),transparent 30%),rgba(250,252,251,.98);animation:abrirPix .4s ease both}
+@keyframes abrirPix{from{opacity:0}to{opacity:1}}
+.pix-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:30px;background:var(--accent-light);color:var(--accent-dark);font-size:12px;font-weight:700;margin-bottom:10px}
+.pixTitulo{font-size:21px;font-weight:700;color:#1c2521}
+#pixBanco{margin-top:8px;font-size:16px;font-weight:700;color:var(--accent)}
+#pixValor{margin:7px 0 20px;font-size:34px;font-weight:800;letter-spacing:-1px}
+#qrcodeGrande{padding:18px;background:white;border-radius:20px;box-shadow:0 15px 45px rgba(20,45,35,.13),0 2px 8px rgba(20,45,35,.06);animation:qrEntrar .5s .1s ease both}
+@keyframes qrEntrar{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+#qrcodeGrande img,#qrcodeGrande canvas{display:block;max-width:100%;height:auto}
+#pixChave{margin-top:11px;max-width:340px;color:#9aa49f;font-size:11px;word-break:break-all}
+.instrucao{margin-top:15px;color:#68756f;font-size:14px}
+.timer{width:330px;max-width:90%;margin-top:20px}
+.timerTexto{margin-bottom:7px;color:#59665f;font-size:13px;font-weight:600}
+.timerBarra{width:100%;height:8px;background:#e1e8e4;border-radius:20px;overflow:hidden}
+.timerProgresso{width:100%;height:100%;background:linear-gradient(90deg,var(--accent),#42b98e);border-radius:20px;transition:width 1s linear}
+.btnFechar{width:180px;height:43px;margin-top:17px;border:1px solid #d9e0dd;border-radius:12px;background:white;color:#5f6964;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
+.btnFechar:hover{background:#f4f6f5}
+@media(max-width:500px){.container{padding:28px 20px 24px;border-radius:20px}h1{font-size:22px}#pixValor{font-size:29px}#qrcodeGrande{padding:13px}#qrcodeGrande img,#qrcodeGrande canvas{width:270px!important;height:270px!important}.pixTitulo{font-size:19px}}
 </style>
-
 </head>
-
+<link rel="icon" type="image/png" href="/Gemini_Generated_Image_wd165bwd165bwd16-removebg-preview.png">
 
 <body>
+<div class="background"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
 
-
-<!-- =====================================================
-     TELA PRINCIPAL
-===================================================== -->
-
+<main class="main">
 <div class="container">
+<div class="logo">PIX</div>
+<h1>Marinas Mercado</h1>
+<br>
 
-    <h2>Marinas Mercado</h2>
-
-
-    <!-- =================================================
-         INSTITUIÇÕES
-    ================================================== -->
-
-    <div class="chaves">
-
-
-        <!-- BANCO INFINITY -->
-
-        <div
-            class="chave-card infinity"
-            onclick="selecionarChave(
-                this,
-                '81985533300',
-                'Banco Infinity',
-                'infinityTexto',
-                'telefone'
-            )"
-        >
-
-            <div class="banco">
-                 Banco Infinity
-            </div>
-
-        </div>
-
-
-        <!-- PICPAY -->
-
-        <div
-            class="chave-card picpay"
-            onclick="selecionarChave(
-                this,
-                'ramonbarros777@gmail.com',
-                'PicPay',
-                'picpayTexto',
-                'email'
-            )"
-        >
-
-            <div class="banco">
-                PicPay
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =================================================
-         VALOR
-    ================================================== -->
-
-    <input
-        id="valor"
-        placeholder="Valor"
-        inputmode="decimal"
-        autocomplete="off"
-    >
-
-
-    <!-- =================================================
-         BOTÃO
-    ================================================== -->
-
-    <button onclick="gerarPix()">
-        Gerar PIX
-    </button>
-
-
-    <!-- =================================================
-         MENSAGEM
-    ================================================== -->
-
-    <div
-        class="mensagem"
-        id="mensagem"
-    >
-        Selecione uma instituição
-    </div>
-
+<div class="bank-card selecionado" onclick="selecionarChave(this)">
+<div class="selected-check">✓</div>
+<div class="bank-top">
+<div class="bank-icon">PIX</div>
+<div>
+<div class="bank-name">Banco Infinity</div>
+<div class="bank-status">Instituição selecionada</div>
+</div>
+</div>
 </div>
 
+<div class="field">
+<label for="valor">Valor do pagamento</label>
+<input id="valor" placeholder="R$ 0,00" inputmode="decimal" autocomplete="off">
+</div>
 
-
-<!-- =====================================================
-     TELA DO QR CODE
-===================================================== -->
+<button class="generate" onclick="gerarPix()">Gerar PIX</button>
+<div class="mensagem" id="mensagem">Banco Infinity selecionado ✓</div>
+</div>
+</main>
 
 <div id="telaPix">
+<div class="pix-badge"><span>●</span> Pagamento PIX</div>
+<div class="pixTitulo">Aponte a câmera para o QR Code</div>
+<div id="pixBanco">PIX • Banco Infinity</div>
+<div id="pixValor">R$ 0,00</div>
+<div id="qrcodeGrande"></div>
+<div id="pixChave"></div>
+<div class="instrucao">Escaneie o QR Code para realizar o pagamento</div>
 
-
-    <div class="pixTitulo">
-        Aponte a câmera para o QR Code
-    </div>
-
-
-    <div id="pixBanco">
-        PIX
-    </div>
-
-
-    <div id="pixValor">
-        R$ 0,00
-    </div>
-
-
-    <div id="qrcodeGrande"></div>
-
-
-    <div id="pixChave"></div>
-
-
-    <div class="instrucao">
-        Escaneie o QR Code para realizar o pagamento
-    </div>
-
-
-    <!-- =================================================
-         TIMER
-    ================================================== -->
-
-    <div class="timer">
-
-        <div
-            class="timerTexto"
-            id="timerTexto"
-        >
-            PIX disponível por 2:00
-        </div>
-
-
-        <div class="timerBarra">
-
-            <div
-                class="timerProgresso"
-                id="timerProgresso"
-            ></div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =================================================
-         BOTÃO VOLTAR
-    ================================================== -->
-
-    <button
-        class="btnFechar"
-        onclick="resetarPix()"
-    >
-        Voltar
-    </button>
-
-
+<div class="timer">
+<div class="timerTexto" id="timerTexto">PIX disponível por 2:00</div>
+<div class="timerBarra"><div class="timerProgresso" id="timerProgresso"></div></div>
 </div>
 
-
+<button class="btnFechar" onclick="resetarPix()">Voltar</button>
+</div>
 
 <script>
-
-/* =====================================================
-   VARIÁVEIS
-===================================================== */
-
-let chaveSelecionada = "";
-
-let bancoSelecionado = "";
-
-let corBanco = "";
-
-let tipoChave = "";
-
-let tempoRestante = 120;
-
-let timer = null;
-
-
-/* =====================================================
-   TEMPO DO PIX
-===================================================== */
-
+const CHAVE_PIX = "81985533300";
+const CHAVE_PIX_FORMATADA = "+5581985533300";
+const NOME_RECEBEDOR = "MARINAS MERCADO";
 const TEMPO_PIX = 120;
 
+let tempoRestante = TEMPO_PIX;
+let timer = null;
 
-/* =====================================================
-   ENTER PARA GERAR PIX
-===================================================== */
-
-document.addEventListener(
-    "keydown",
-    function(event){
-
-        if(event.key === "Enter"){
-
-            const telaPix =
-                document.getElementById("telaPix");
-
-
-            if(
-                telaPix.style.display !== "flex"
-            ){
-
-                gerarPix();
-
-            }
-
-        }
-
+document.addEventListener("keydown", function(event){
+    if(event.key === "Enter"){
+        const telaPix = document.getElementById("telaPix");
+        if(telaPix.style.display !== "flex") gerarPix();
     }
-);
+});
 
-
-/* =====================================================
-   SELECIONAR INSTITUIÇÃO
-===================================================== */
-
-function selecionarChave(
-    elemento,
-    chave,
-    banco,
-    cor,
-    tipo
-){
-
-    /*
-       Remove seleção anterior
-    */
-
-    document
-        .querySelectorAll(".chave-card")
-        .forEach(card => {
-
-            card.classList.remove(
-                "selecionado"
-            );
-
-        });
-
-
-    /*
-       Destaca instituição
-    */
-
-    elemento.classList.add(
-        "selecionado"
-    );
-
-
-    /*
-       Guarda informações
-    */
-
-    chaveSelecionada = chave;
-
-    bancoSelecionado = banco;
-
-    corBanco = cor;
-
-    tipoChave = tipo;
-
-
-    /*
-       Atualiza mensagem
-    */
-
-    const mensagem =
-        document.getElementById(
-            "mensagem"
-        );
-
-
-    mensagem.innerText =
-        banco + " selecionado ✓";
-
-
-    /*
-       Remove cores anteriores
-    */
-
-    mensagem.classList.remove(
-        "infinityTexto",
-        "picpayTexto"
-    );
-
-
-    /*
-       Adiciona a cor correspondente
-    */
-
-    mensagem.classList.add(
-        cor
-    );
-
+function selecionarChave(elemento){
+    document.querySelectorAll(".bank-card").forEach(card => card.classList.remove("selecionado"));
+    elemento.classList.add("selecionado");
+    document.getElementById("mensagem").innerText = "Banco Infinity selecionado ✓";
 }
 
+const valorInput = document.getElementById("valor");
 
-/* =====================================================
-   FORMATAÇÃO DO VALOR
-===================================================== */
+valorInput.addEventListener("input", function(){
+    let numeros = valorInput.value.replace(/\D/g,"");
 
-const valorInput =
-    document.getElementById("valor");
-
-
-valorInput.addEventListener(
-    "input",
-    function(){
-
-        let numeros =
-            valorInput.value
-            .replace(/\D/g,"");
-
-
-        if(
-            numeros.length === 0
-        ){
-
-            valorInput.value = "";
-
-            return;
-
-        }
-
-
-        let valor =
-            (
-                parseInt(numeros) /
-                100
-            ).toFixed(2);
-
-
-        valor =
-            valor.replace(
-                ".",
-                ","
-            );
-
-
-        valor =
-            valor.replace(
-                /\B(?=(\d{3})+(?!\d))/g,
-                "."
-            );
-
-
-        valorInput.value =
-            "R$ " + valor;
-
+    if(numeros.length === 0){
+        valorInput.value = "";
+        return;
     }
-);
 
-
-/* =====================================================
-   CAMPO PIX
-===================================================== */
+    let valor = (parseInt(numeros) / 100).toFixed(2);
+    valor = valor.replace(".",",");
+    valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g,".");
+    valorInput.value = "R$ " + valor;
+});
 
 function campo(id, valor){
-
-    const tamanho =
-        valor.length
-        .toString()
-        .padStart(2,"0");
-
-
-    return (
-        id +
-        tamanho +
-        valor
-    );
-
+    const tamanho = valor.length.toString().padStart(2,"0");
+    return id + tamanho + valor;
 }
-
-
-/* =====================================================
-   CRC16
-===================================================== */
 
 function crc16(payload){
-
     const polinomio = 0x1021;
-
     let resultado = 0xFFFF;
 
+    for(let i=0;i<payload.length;i++){
+        resultado ^= payload.charCodeAt(i) << 8;
 
-    for(
-        let i = 0;
-        i < payload.length;
-        i++
-    ){
+        for(let j=0;j<8;j++){
+            resultado = (resultado & 0x8000)
+                ? (resultado << 1) ^ polinomio
+                : resultado << 1;
 
-        resultado ^=
-            payload.charCodeAt(i)
-            << 8;
-
-
-        for(
-            let j = 0;
-            j < 8;
-            j++
-        ){
-
-            resultado =
-                (resultado & 0x8000)
-
-                ?
-
-                (resultado << 1)
-                ^ polinomio
-
-                :
-
-                resultado << 1;
-
-
-            resultado &=
-                0xFFFF;
-
+            resultado &= 0xFFFF;
         }
-
     }
 
-
-    return resultado
-        .toString(16)
-        .toUpperCase()
-        .padStart(4,"0");
-
+    return resultado.toString(16).toUpperCase().padStart(4,"0");
 }
-
-
-/* =====================================================
-   PREPARAR CHAVE PIX
-===================================================== */
-
-function prepararChavePix(){
-
-    /*
-       Se for telefone, adiciona +55.
-       
-       A chave informada pelo usuário:
-       81985533300
-
-       Será transformada em:
-       +5581985533300
-    */
-
-    if(tipoChave === "telefone"){
-
-        let numero =
-            chaveSelecionada
-            .replace(/\D/g,"");
-
-
-        /*
-           Se já possuir 55 no início,
-           não adiciona novamente.
-        */
-
-        if(
-            numero.startsWith("55")
-        ){
-
-            return "+" + numero;
-
-        }
-
-
-        return "+55" + numero;
-
-    }
-
-
-    /*
-       Para e-mail mantém exatamente
-       como foi cadastrado.
-    */
-
-    return chaveSelecionada;
-
-}
-
-
-/* =====================================================
-   GERAR PIX
-===================================================== */
 
 function gerarPix(){
 
-    /*
-       Verifica instituição
-    */
-
-    if(!chaveSelecionada){
-
-        alert(
-            "Selecione uma instituição de pagamento."
-        );
-
-        return;
-
-    }
-
-
-    /*
-       Pega o valor
-    */
-
-    let valor =
-        valorInput.value
+    let valor = valorInput.value
         .replace("R$","")
         .replace(/\./g,"")
         .replace(",",".")
         .trim();
 
-
-    /*
-       Verifica valor
-    */
-
-    if(
-        !valor ||
-        parseFloat(valor) <= 0
-    ){
-
-        alert(
-            "Digite um valor válido."
-        );
-
+    if(!valor || parseFloat(valor) <= 0){
+        alert("Digite um valor válido.");
         valorInput.focus();
-
         return;
-
     }
 
-
-    /*
-       Nome do recebedor
-    */
-
-    const nome =
-        "MARINAS MERCADO";
-
-
-    /*
-       Prepara a chave
-    */
-
-    const chaveFinal =
-        prepararChavePix();
-
-
-    /*
-       Montagem do campo 26
-    */
-
     const chavePix =
-
-        campo(
-            "00",
-            "BR.GOV.BCB.PIX"
-        )
-
-        +
-
-        campo(
-            "01",
-            chaveFinal
-        );
-
-
-    /*
-       Montagem do payload
-    */
+        campo("00","BR.GOV.BCB.PIX") +
+        campo("01",CHAVE_PIX_FORMATADA);
 
     let payload = "";
 
-
-    /*
-       Payload Format Indicator
-    */
-
     payload += "000201";
-
-
-    /*
-       Merchant Account Information
-    */
-
-    payload += campo(
-        "26",
-        chavePix
-    );
-
-
-    /*
-       Merchant Category Code
-    */
-
+    payload += campo("26",chavePix);
     payload += "52040000";
-
-
-    /*
-       Currency - BRL
-    */
-
     payload += "5303986";
-
-
-    /*
-       Valor
-    */
-
-    payload += campo(
-        "54",
-        valor
-    );
-
-
-    /*
-       País
-    */
-
+    payload += campo("54",valor);
     payload += "5802BR";
-
-
-    /*
-       Nome do recebedor
-    */
-
-    payload += campo(
-        "59",
-        nome
-    );
-
-
-    /*
-       Cidade
-    */
-
-    payload += campo(
-        "60",
-        "***"
-    );
-
-
-    /*
-       TXID
-    */
-
+    payload += campo("59",NOME_RECEBEDOR);
+    payload += campo("60","***");
     payload += "62070503***";
-
-
-    /*
-       CRC
-    */
-
     payload += "6304";
-
-
     payload += crc16(payload);
 
+    document.getElementById("pixBanco").innerText = "PIX • Banco Infinity";
+    document.getElementById("pixValor").innerText = valorInput.value;
+    document.getElementById("pixChave").innerText = "Chave: " + CHAVE_PIX;
 
-    /*
-       Elementos da tela
-    */
+    const qr = document.getElementById("qrcodeGrande");
+    qr.innerHTML = "";
 
-    const telaPix =
-        document.getElementById(
-            "telaPix"
-        );
+    new QRCode(qr,{
+        text:payload,
+        width:300,
+        height:300,
+        correctLevel:QRCode.CorrectLevel.M
+    });
 
-
-    const banco =
-        document.getElementById(
-            "pixBanco"
-        );
-
-
-    const valorTela =
-        document.getElementById(
-            "pixValor"
-        );
-
-
-    const chaveTela =
-        document.getElementById(
-            "pixChave"
-        );
-
-
-    /*
-       Banco
-    */
-
-    banco.innerText =
-        "PIX • " +
-        bancoSelecionado;
-
-
-    banco.className =
-        corBanco;
-
-
-    /*
-       Valor
-    */
-
-    valorTela.innerText =
-        valorInput.value;
-
-
-    /*
-       Chave discreta
-    */
-
-    chaveTela.innerText =
-        "Chave: " +
-        chaveFinal;
-
-
-    /*
-       Limpa QR anterior
-    */
-
-    document.getElementById(
-        "qrcodeGrande"
-    ).innerHTML = "";
-
-
-    /*
-       Gera QR Code
-    */
-
-    new QRCode(
-
-        document.getElementById(
-            "qrcodeGrande"
-        ),
-
-        {
-            text:payload,
-            width:300,
-            height:300,
-            correctLevel:QRCode.CorrectLevel.M
-        }
-
-    );
-
-
-    /*
-       Mostra tela
-    */
-
-    telaPix.style.display =
-        "flex";
-
-
-    /*
-       Inicia timer
-    */
-
+    document.getElementById("telaPix").style.display = "flex";
     iniciarTimer();
-
 }
-
-
-/* =====================================================
-   FORMATAR TEMPO
-===================================================== */
 
 function formatarTempo(segundos){
+    const minutos = Math.floor(segundos / 60);
+    const segundosRestantes = segundos % 60;
 
-    const minutos =
-        Math.floor(
-            segundos / 60
-        );
-
-
-    const segundosRestantes =
-        segundos % 60;
-
-
-    return (
-        minutos +
-        ":" +
-        segundosRestantes
-            .toString()
-            .padStart(2,"0")
-    );
-
+    return minutos + ":" + segundosRestantes.toString().padStart(2,"0");
 }
-
-
-/* =====================================================
-   TIMER — 2 MINUTOS
-===================================================== */
 
 function iniciarTimer(){
 
-    /*
-       Cancela timer anterior
-    */
-
     clearInterval(timer);
 
+    tempoRestante = TEMPO_PIX;
 
-    /*
-       Volta para 120 segundos
-    */
+    const texto = document.getElementById("timerTexto");
+    const progresso = document.getElementById("timerProgresso");
 
-    tempoRestante =
-        TEMPO_PIX;
+    progresso.style.width = "100%";
+    texto.innerText = "PIX disponível por " + formatarTempo(tempoRestante);
 
+    timer = setInterval(function(){
 
-    const texto =
-        document.getElementById(
-            "timerTexto"
-        );
+        tempoRestante--;
 
+        if(tempoRestante <= 0){
 
-    const progresso =
-        document.getElementById(
-            "timerProgresso"
-        );
+            clearInterval(timer);
 
+            texto.innerText = "PIX expirado";
+            progresso.style.width = "0%";
 
-    /*
-       Barra cheia
-    */
+            setTimeout(function(){
+                resetarPix();
+            },500);
 
-    progresso.style.width =
-        "100%";
+            return;
+        }
 
+        texto.innerText =
+            "PIX disponível por " +
+            formatarTempo(tempoRestante);
 
-    /*
-       Texto inicial
-    */
+        progresso.style.width =
+            (tempoRestante / TEMPO_PIX * 100) + "%";
 
-    texto.innerText =
-        "PIX disponível por " +
-        formatarTempo(
-            tempoRestante
-        );
-
-
-    /*
-       Inicia contagem
-    */
-
-    timer =
-        setInterval(
-            function(){
-
-                tempoRestante--;
-
-
-                /*
-                   Quando chegar a zero
-                */
-
-                if(
-                    tempoRestante <= 0
-                ){
-
-                    clearInterval(timer);
-
-
-                    texto.innerText =
-                        "PIX expirado";
-
-
-                    progresso.style.width =
-                        "0%";
-
-
-                    /*
-                       Fecha a tela
-                       após meio segundo
-                    */
-
-                    setTimeout(
-                        function(){
-
-                            resetarPix();
-
-                        },
-                        500
-                    );
-
-
-                    return;
-
-                }
-
-
-                /*
-                   Atualiza tempo
-                */
-
-                texto.innerText =
-                    "PIX disponível por " +
-                    formatarTempo(
-                        tempoRestante
-                    );
-
-
-                /*
-                   Atualiza barra
-                */
-
-                progresso.style.width =
-                    (
-                        tempoRestante /
-                        TEMPO_PIX *
-                        100
-                    ) + "%";
-
-            },
-            1000
-        );
-
+    },1000);
 }
-
-
-/* =====================================================
-   RESETAR
-===================================================== */
 
 function resetarPix(){
 
-    /*
-       Para timer
-    */
-
     clearInterval(timer);
 
+    document.getElementById("telaPix").style.display = "none";
+    document.getElementById("qrcodeGrande").innerHTML = "";
+    document.getElementById("pixChave").innerText = "";
+    document.getElementById("valor").value = "";
+    document.getElementById("timerProgresso").style.width = "100%";
+    document.getElementById("timerTexto").innerText = "PIX disponível por 2:00";
 
-    /*
-       Fecha tela
-    */
-
-    document.getElementById(
-        "telaPix"
-    ).style.display =
-        "none";
-
-
-    /*
-       Limpa QR
-    */
-
-    document.getElementById(
-        "qrcodeGrande"
-    ).innerHTML = "";
-
-
-    /*
-       Limpa chave
-    */
-
-    document.getElementById(
-        "pixChave"
-    ).innerText = "";
-
-
-    /*
-       Limpa valor
-    */
-
-    document.getElementById(
-        "valor"
-    ).value = "";
-
-
-    /*
-       Remove seleção
-    */
-
-    document
-        .querySelectorAll(".chave-card")
-        .forEach(card => {
-
-            card.classList.remove(
-                "selecionado"
-            );
-
-        });
-
-
-    /*
-       Limpa variáveis
-    */
-
-    chaveSelecionada = "";
-
-    bancoSelecionado = "";
-
-    corBanco = "";
-
-    tipoChave = "";
-
-
-    /*
-       Reseta mensagem
-    */
-
-    const mensagem =
-        document.getElementById(
-            "mensagem"
-        );
-
-
-    mensagem.innerText =
-        "Selecione uma instituição";
-
-
-    mensagem.classList.remove(
-        "infinityTexto",
-        "picpayTexto"
-    );
-
-
-    /*
-       Reseta timer
-    */
-
-    tempoRestante =
-        TEMPO_PIX;
-
-
-    document.getElementById(
-        "timerProgresso"
-    ).style.width =
-        "100%";
-
-
-    document.getElementById(
-        "timerTexto"
-    ).innerText =
-        "PIX disponível por 2:00";
-
+    tempoRestante = TEMPO_PIX;
 }
-
 </script>
-
 </body>
-
 </html>
-
