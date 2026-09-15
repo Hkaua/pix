@@ -1,284 +1,2982 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
 <title>MARINAS MERCADO • PIX</title>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
 <style>
-*{box-sizing:border-box}
-:root{--accent:#1f8f6b;--accent-dark:#176b51;--accent-light:#e9f7f2;--text:#17211d;--muted:#718078}
-html,body{margin:0;min-height:100%}
-body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 15% 15%,rgba(31,143,107,.10),transparent 28%),radial-gradient(circle at 85% 80%,rgba(31,143,107,.08),transparent 30%),#f3f7f5;color:var(--text);overflow:hidden}
-.background{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
-.orb{position:absolute;border-radius:50%;filter:blur(2px);opacity:.16;background:rgba(31,143,107,.28);animation:flutuar 14s ease-in-out infinite}
-.orb:nth-child(1){width:190px;height:190px;left:-70px;top:12%}
-.orb:nth-child(2){width:250px;height:250px;right:-100px;top:55%;animation-delay:-5s;animation-duration:18s}
-.orb:nth-child(3){width:120px;height:120px;left:60%;top:-50px;animation-delay:-8s;animation-duration:16s}
-@keyframes flutuar{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(18px,-20px,0) scale(1.06)}}
-.main{position:relative;z-index:1;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
-.container{width:390px;max-width:100%;padding:34px 30px 30px;background:rgba(255,255,255,.90);border:1px solid rgba(255,255,255,.8);border-radius:24px;box-shadow:0 20px 60px rgba(24,50,40,.12),0 4px 15px rgba(24,50,40,.05);backdrop-filter:blur(14px);animation:entrar .7s ease both}
-@keyframes entrar{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-.logo{width:58px;height:58px;margin:0 auto 15px;display:flex;align-items:center;justify-content:center;border-radius:18px;background:var(--accent-light);color:var(--accent);font-size:25px;font-weight:800;box-shadow:0 8px 20px rgba(31,143,107,.10)}
-h1{margin:0;text-align:center;font-size:24px;letter-spacing:-.5px}
-.subtitle{margin:8px 0 28px;text-align:center;color:var(--muted);font-size:14px}
-.bank-card{position:relative;width:100%;padding:18px;border:2px solid var(--accent);border-radius:16px;background:linear-gradient(135deg,#f8fffc,#edf9f4);cursor:pointer;text-align:left;transition:.25s ease;box-shadow:0 8px 25px rgba(31,143,107,.08)}
-.bank-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(31,143,107,.14)}
-.bank-card.selecionado{box-shadow:0 0 0 4px rgba(31,143,107,.08),0 12px 30px rgba(31,143,107,.13)}
-.bank-top{display:flex;align-items:center;gap:13px}
-.bank-icon{width:45px;height:45px;border-radius:13px;background:var(--accent);color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;box-shadow:0 7px 16px rgba(31,143,107,.22)}
-.bank-name{font-size:17px;font-weight:700}
-.bank-status{margin-top:3px;font-size:12px;color:var(--muted)}
-.selected-check{position:absolute;right:16px;top:16px;width:25px;height:25px;border-radius:50%;background:var(--accent);color:white;display:flex;align-items:center;justify-content:center;font-size:13px}
-.field{margin-top:20px}
-label{display:block;margin-bottom:7px;font-size:13px;font-weight:700;color:#46534d}
-input{width:100%;height:52px;padding:0 15px;border:1px solid #d8e0dc;border-radius:13px;background:#fff;color:var(--text);font-size:16px;outline:none;transition:.2s}
-input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(31,143,107,.08)}
-.generate{margin-top:18px;width:100%;height:52px;border:0;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:white;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 10px 22px rgba(31,143,107,.20);transition:.2s}
-.generate:hover{transform:translateY(-1px);box-shadow:0 13px 27px rgba(31,143,107,.26)}
-.generate:active{transform:translateY(1px)}
-.mensagem{min-height:18px;margin-top:13px;text-align:center;font-size:13px;font-weight:700;color:var(--accent)}
-#telaPix{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px;background:radial-gradient(circle at 20% 10%,rgba(31,143,107,.09),transparent 25%),radial-gradient(circle at 85% 90%,rgba(31,143,107,.07),transparent 30%),rgba(250,252,251,.98);animation:abrirPix .4s ease both}
-@keyframes abrirPix{from{opacity:0}to{opacity:1}}
-.pix-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:30px;background:var(--accent-light);color:var(--accent-dark);font-size:12px;font-weight:700;margin-bottom:10px}
-.pixTitulo{font-size:21px;font-weight:700;color:#1c2521}
-#pixBanco{margin-top:8px;font-size:16px;font-weight:700;color:var(--accent)}
-#pixValor{margin:7px 0 20px;font-size:34px;font-weight:800;letter-spacing:-1px}
-#qrcodeGrande{padding:18px;background:white;border-radius:20px;box-shadow:0 15px 45px rgba(20,45,35,.13),0 2px 8px rgba(20,45,35,.06);animation:qrEntrar .5s .1s ease both}
-@keyframes qrEntrar{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
-#qrcodeGrande img,#qrcodeGrande canvas{display:block;max-width:100%;height:auto}
-#pixChave{margin-top:11px;max-width:340px;color:#9aa49f;font-size:11px;word-break:break-all}
-.instrucao{margin-top:15px;color:#68756f;font-size:14px}
-.timer{width:330px;max-width:90%;margin-top:20px}
-.timerTexto{margin-bottom:7px;color:#59665f;font-size:13px;font-weight:600}
-.timerBarra{width:100%;height:8px;background:#e1e8e4;border-radius:20px;overflow:hidden}
-.timerProgresso{width:100%;height:100%;background:linear-gradient(90deg,var(--accent),#42b98e);border-radius:20px;transition:width 1s linear}
-.btnFechar{width:180px;height:43px;margin-top:17px;border:1px solid #d9e0dd;border-radius:12px;background:white;color:#5f6964;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
-.btnFechar:hover{background:#f4f6f5}
-@media(max-width:500px){.container{padding:28px 20px 24px;border-radius:20px}h1{font-size:22px}#pixValor{font-size:29px}#qrcodeGrande{padding:13px}#qrcodeGrande img,#qrcodeGrande canvas{width:270px!important;height:270px!important}.pixTitulo{font-size:19px}}
+
+/* =========================================================
+   CONFIGURAÇÕES
+========================================================= */
+
+*{
+    box-sizing:border-box;
+}
+
+:root{
+
+    --accent:#00a868;
+    --accent-dark:#007f50;
+    --accent-light:#e8f8f1;
+
+    --text:#17211d;
+    --muted:#718078;
+
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+html,
+body{
+
+    margin:0;
+    min-height:100%;
+
+}
+
+
+body{
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color:var(--text);
+
+    overflow:hidden;
+
+    background:
+
+        radial-gradient(
+            circle at 10% 15%,
+            rgba(0,168,104,.15),
+            transparent 25%
+        ),
+
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(0,168,104,.12),
+            transparent 30%
+        ),
+
+        linear-gradient(
+            135deg,
+            #f7fbf9,
+            #edf5f1
+        );
+
+}
+
+
+/* =========================================================
+   FUNDO ANIMADO
+========================================================= */
+
+.background{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    pointer-events:none;
+
+    z-index:0;
+
+}
+
+
+/* círculos verdes */
+
+.orb{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    background:#00a868;
+
+    filter:blur(35px);
+
+    opacity:.14;
+
+    animation:
+        flutuar 12s ease-in-out infinite,
+        pulsar 6s ease-in-out infinite;
+
+}
+
+
+/* primeira luz */
+
+.orb:nth-child(1){
+
+    width:220px;
+    height:220px;
+
+    left:-80px;
+    top:10%;
+
+}
+
+
+/* segunda luz */
+
+.orb:nth-child(2){
+
+    width:300px;
+    height:300px;
+
+    right:-130px;
+    top:55%;
+
+    animation-delay:-4s;
+
+    animation-duration:16s;
+
+}
+
+
+/* terceira luz */
+
+.orb:nth-child(3){
+
+    width:150px;
+    height:150px;
+
+    left:60%;
+    top:-70px;
+
+    animation-delay:-7s;
+
+    animation-duration:14s;
+
+}
+
+
+/* quarta luz */
+
+.background::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:100px;
+    height:100px;
+
+    left:20%;
+    bottom:-50px;
+
+    border-radius:50%;
+
+    background:#00a868;
+
+    filter:blur(30px);
+
+    opacity:.12;
+
+    animation:
+        flutuarExtra 10s ease-in-out infinite;
+
+}
+
+
+/* quinta luz */
+
+.background::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:80px;
+    height:80px;
+
+    right:25%;
+    top:30%;
+
+    border-radius:50%;
+
+    background:#00a868;
+
+    filter:blur(25px);
+
+    opacity:.10;
+
+    animation:
+        pulsar 5s ease-in-out infinite;
+
+}
+
+
+/* movimento */
+
+@keyframes flutuar{
+
+    0%,
+    100%{
+
+        transform:
+            translate3d(0,0,0)
+            scale(1);
+
+    }
+
+    50%{
+
+        transform:
+            translate3d(35px,-30px,0)
+            scale(1.15);
+
+    }
+
+}
+
+
+/* pulsação */
+
+@keyframes pulsar{
+
+    0%,
+    100%{
+
+        opacity:.08;
+
+    }
+
+    50%{
+
+        opacity:.22;
+
+    }
+
+}
+
+
+/* movimento extra */
+
+@keyframes flutuarExtra{
+
+    0%,
+    100%{
+
+        transform:
+            translate(0,0)
+            scale(1);
+
+    }
+
+    50%{
+
+        transform:
+            translate(80px,-100px)
+            scale(1.3);
+
+    }
+
+}
+
+
+/* =========================================================
+   CONTAINER PRINCIPAL
+========================================================= */
+
+.main{
+
+    position:relative;
+
+    z-index:1;
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:20px;
+
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.container{
+
+    position:relative;
+
+    width:390px;
+
+    max-width:100%;
+
+    padding:
+        34px
+        30px
+        30px;
+
+    background:
+        rgba(255,255,255,.92);
+
+    border:
+        1px solid
+        rgba(0,168,104,.14);
+
+    border-radius:24px;
+
+    box-shadow:
+
+        0 25px 70px
+        rgba(24,50,40,.13),
+
+        0 5px 18px
+        rgba(24,50,40,.06);
+
+    backdrop-filter:
+        blur(18px);
+
+    animation:
+        entrar .8s
+        cubic-bezier(.2,.8,.2,1)
+        both;
+
+}
+
+
+/* brilho passando pelo card */
+
+.container::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-100%;
+
+    width:50%;
+
+    height:100%;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.35),
+            transparent
+        );
+
+    transform:
+        skewX(-20deg);
+
+    animation:
+        brilhoContainer 7s
+        ease-in-out
+        infinite;
+
+    pointer-events:none;
+
+}
+
+
+/* entrada */
+
+@keyframes entrar{
+
+    0%{
+
+        opacity:0;
+
+        transform:
+            translateY(30px)
+            scale(.96);
+
+    }
+
+    100%{
+
+        opacity:1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+/* brilho */
+
+@keyframes brilhoContainer{
+
+    0%,
+    65%{
+
+        left:-100%;
+
+    }
+
+    80%{
+
+        left:150%;
+
+    }
+
+    100%{
+
+        left:150%;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo{
+
+    position:relative;
+
+    width:58px;
+    height:58px;
+
+    margin:
+        0
+        auto
+        15px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:18px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #00b878,
+            #008653
+        );
+
+    color:white;
+
+    font-size:20px;
+
+    font-weight:800;
+
+    box-shadow:
+
+        0 8px 25px
+        rgba(0,168,104,.25);
+
+    animation:
+
+        logoEntrada .8s
+        .2s
+        both,
+
+        logoPulso 4s
+        1s
+        ease-in-out
+        infinite;
+
+}
+
+
+/* brilho do logo */
+
+.logo::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    border-radius:18px;
+
+    border:
+        2px solid
+        rgba(0,168,104,.25);
+
+    animation:
+        logoBorda 2.5s
+        ease-in-out
+        infinite;
+
+}
+
+
+/* entrada */
+
+@keyframes logoEntrada{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            scale(.5)
+            rotate(-15deg);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            scale(1)
+            rotate(0);
+
+    }
+
+}
+
+
+/* pulso */
+
+@keyframes logoPulso{
+
+    0%,
+    100%{
+
+        box-shadow:
+            0 8px 25px
+            rgba(0,168,104,.20);
+
+    }
+
+    50%{
+
+        box-shadow:
+            0 8px 35px
+            rgba(0,168,104,.40);
+
+    }
+
+}
+
+
+/* borda */
+
+@keyframes logoBorda{
+
+    0%,
+    100%{
+
+        transform:scale(1);
+
+        opacity:.5;
+
+    }
+
+    50%{
+
+        transform:scale(1.15);
+
+        opacity:0;
+
+    }
+
+}
+
+
+/* =========================================================
+   TÍTULO
+========================================================= */
+
+h1{
+
+    margin:0;
+
+    text-align:center;
+
+    font-size:24px;
+
+    letter-spacing:-.5px;
+
+    animation:
+        textoEntrada .7s
+        .3s
+        both;
+
+}
+
+
+@keyframes textoEntrada{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+/* =========================================================
+   CARD STONE
+========================================================= */
+
+.bank-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    width:100%;
+
+    padding:18px;
+
+    border:
+        2px solid
+        var(--accent);
+
+    border-radius:16px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #fafffd,
+            #edf9f4
+        );
+
+    cursor:pointer;
+
+    text-align:left;
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease;
+
+    box-shadow:
+
+        0 8px 25px
+        rgba(0,168,104,.08);
+
+    animation:
+        cardEntrada .8s
+        .45s
+        both;
+
+}
+
+
+/* entrada */
+
+@keyframes cardEntrada{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateX(-20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateX(0);
+
+    }
+
+}
+
+
+/* brilho passando */
+
+.bank-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:-100%;
+
+    left:-70%;
+
+    width:40%;
+
+    height:300%;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.55),
+            transparent
+        );
+
+    transform:
+        rotate(20deg);
+
+    animation:
+        brilhoStone 5s
+        ease-in-out
+        infinite;
+
+}
+
+
+/* movimento do brilho */
+
+@keyframes brilhoStone{
+
+    0%,
+    55%{
+
+        left:-70%;
+
+    }
+
+    75%{
+
+        left:140%;
+
+    }
+
+    100%{
+
+        left:140%;
+
+    }
+
+}
+
+
+/* hover */
+
+.bank-card:hover{
+
+    transform:
+        translateY(-4px)
+        scale(1.01);
+
+    box-shadow:
+
+        0 16px 38px
+        rgba(0,168,104,.18);
+
+}
+
+
+/* selecionado */
+
+.bank-card.selecionado{
+
+    box-shadow:
+
+        0 0 0 4px
+        rgba(0,168,104,.08),
+
+        0 14px 35px
+        rgba(0,168,104,.14);
+
+}
+
+
+/* =========================================================
+   STONE
+========================================================= */
+
+.bank-top{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+}
+
+
+.bank-icon{
+
+    width:45px;
+    height:45px;
+
+    border-radius:13px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #00b878,
+            #008653
+        );
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:12px;
+
+    font-weight:800;
+
+    box-shadow:
+
+        0 7px 18px
+        rgba(0,168,104,.25);
+
+    transition:
+        transform .3s ease;
+
+}
+
+
+.bank-card:hover .bank-icon{
+
+    transform:
+        rotate(-5deg)
+        scale(1.08);
+
+}
+
+
+.bank-name{
+
+    font-size:17px;
+
+    font-weight:700;
+
+}
+
+
+.bank-status{
+
+    margin-top:3px;
+
+    font-size:12px;
+
+    color:var(--muted);
+
+}
+
+
+/* check */
+
+.selected-check{
+
+    position:absolute;
+
+    right:16px;
+    top:16px;
+
+    width:25px;
+    height:25px;
+
+    border-radius:50%;
+
+    background:var(--accent);
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:13px;
+
+    animation:
+        checkPulse 3s
+        ease-in-out
+        infinite;
+
+}
+
+
+@keyframes checkPulse{
+
+    0%,
+    100%{
+
+        box-shadow:
+            0 0 0 0
+            rgba(0,168,104,.3);
+
+    }
+
+    50%{
+
+        box-shadow:
+            0 0 0 6px
+            rgba(0,168,104,0);
+
+    }
+
+}
+
+
+/* =========================================================
+   CAMPO
+========================================================= */
+
+.field{
+
+    margin-top:20px;
+
+    animation:
+        campoEntrada .8s
+        .6s
+        both;
+
+}
+
+
+@keyframes campoEntrada{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(15px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+label{
+
+    display:block;
+
+    margin-bottom:7px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:#46534d;
+
+}
+
+
+input{
+
+    width:100%;
+
+    height:52px;
+
+    padding:
+        0
+        15px;
+
+    border:
+        1px solid
+        #d8e0dc;
+
+    border-radius:13px;
+
+    background:#fff;
+
+    color:var(--text);
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:
+        border .2s,
+        box-shadow .2s,
+        transform .2s;
+
+}
+
+
+input:focus{
+
+    border-color:
+        var(--accent);
+
+    box-shadow:
+
+        0 0 0 4px
+        rgba(0,168,104,.08);
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+/* =========================================================
+   BOTÃO
+========================================================= */
+
+.generate{
+
+    position:relative;
+
+    overflow:hidden;
+
+    margin-top:18px;
+
+    width:100%;
+
+    height:52px;
+
+    border:0;
+
+    border-radius:13px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #00b878,
+            #007f50
+        );
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    box-shadow:
+
+        0 10px 22px
+        rgba(0,168,104,.20);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+
+    animation:
+        botaoEntrada .8s
+        .7s
+        both;
+
+}
+
+
+/* entrada */
+
+@keyframes botaoEntrada{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(15px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+/* brilho */
+
+.generate::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-100%;
+
+    width:60%;
+
+    height:100%;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.35),
+            transparent
+        );
+
+    transform:
+        skewX(-20deg);
+
+    animation:
+        brilhoBotao 3.5s
+        infinite;
+
+}
+
+
+@keyframes brilhoBotao{
+
+    0%{
+
+        left:-100%;
+
+    }
+
+    45%{
+
+        left:140%;
+
+    }
+
+    100%{
+
+        left:140%;
+
+    }
+
+}
+
+
+/* hover */
+
+.generate:hover{
+
+    transform:
+        translateY(-3px)
+        scale(1.01);
+
+    box-shadow:
+
+        0 16px 35px
+        rgba(0,168,104,.35);
+
+}
+
+
+/* clique */
+
+.generate:active{
+
+    transform:
+        translateY(1px)
+        scale(.99);
+
+}
+
+
+/* mensagem */
+
+.mensagem{
+
+    min-height:18px;
+
+    margin-top:13px;
+
+    text-align:center;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:var(--accent);
+
+}
+
+
+/* =========================================================
+   TELA PIX
+========================================================= */
+
+#telaPix{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:10;
+
+    display:none;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    padding:20px;
+
+    background:
+
+        radial-gradient(
+            circle at 20% 10%,
+            rgba(0,168,104,.13),
+            transparent 25%
+        ),
+
+        radial-gradient(
+            circle at 85% 90%,
+            rgba(0,168,104,.10),
+            transparent 30%
+        ),
+
+        rgba(250,252,251,.98);
+
+    animation:
+        abrirPix .5s
+        ease
+        both;
+
+}
+
+
+/* entrada tela */
+
+@keyframes abrirPix{
+
+    0%{
+
+        opacity:0;
+
+        transform:
+            scale(1.03);
+
+    }
+
+    100%{
+
+        opacity:1;
+
+        transform:
+            scale(1);
+
+    }
+
+}
+
+
+/* =========================================================
+   BADGE
+========================================================= */
+
+.pix-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    padding:
+        7px
+        12px;
+
+    border-radius:30px;
+
+    background:
+        var(--accent-light);
+
+    color:
+        var(--accent-dark);
+
+    font-size:12px;
+
+    font-weight:700;
+
+    margin-bottom:10px;
+
+    animation:
+        badgeEntrada .6s
+        .1s
+        both;
+
+}
+
+
+@keyframes badgeEntrada{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(-10px)
+            scale(.9);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+/* bolinha */
+
+.pix-badge span{
+
+    animation:
+        pontoPiscar 1.5s
+        ease-in-out
+        infinite;
+
+}
+
+
+@keyframes pontoPiscar{
+
+    0%,
+    100%{
+
+        opacity:1;
+
+    }
+
+    50%{
+
+        opacity:.35;
+
+    }
+
+}
+
+
+/* =========================================================
+   TEXTO PIX
+========================================================= */
+
+.pixTitulo{
+
+    font-size:21px;
+
+    font-weight:700;
+
+    color:#1c2521;
+
+    animation:
+        textoPixEntrada .6s
+        .2s
+        both;
+
+}
+
+
+@keyframes textoPixEntrada{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(12px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+#pixBanco{
+
+    margin-top:8px;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    color:var(--accent);
+
+    animation:
+        textoPixEntrada .6s
+        .3s
+        both;
+
+}
+
+
+#pixValor{
+
+    margin:
+        7px
+        0
+        20px;
+
+    font-size:34px;
+
+    font-weight:800;
+
+    letter-spacing:-1px;
+
+    animation:
+        valorEntrada .7s
+        .35s
+        both;
+
+}
+
+
+@keyframes valorEntrada{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            scale(.8);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            scale(1);
+
+    }
+
+}
+
+
+/* =========================================================
+   QR CODE
+========================================================= */
+
+#qrcodeGrande{
+
+    padding:18px;
+
+    background:white;
+
+    border-radius:20px;
+
+    box-shadow:
+
+        0 15px 45px
+        rgba(20,45,35,.13),
+
+        0 2px 8px
+        rgba(20,45,35,.06);
+
+    animation:
+
+        qrEntrar .7s
+        cubic-bezier(.2,.8,.2,1)
+        both,
+
+        qrFlutuar 4s
+        ease-in-out
+        1s
+        infinite;
+
+}
+
+
+/* entrada QR */
+
+@keyframes qrEntrar{
+
+    0%{
+
+        opacity:0;
+
+        transform:
+            scale(.75)
+            translateY(30px);
+
+    }
+
+    70%{
+
+        transform:
+            scale(1.03)
+            translateY(-3px);
+
+    }
+
+    100%{
+
+        opacity:1;
+
+        transform:
+            scale(1)
+            translateY(0);
+
+    }
+
+}
+
+
+/* flutuação */
+
+@keyframes qrFlutuar{
+
+    0%,
+    100%{
+
+        transform:
+            translateY(0);
+
+    }
+
+    50%{
+
+        transform:
+            translateY(-5px);
+
+    }
+
+}
+
+
+#qrcodeGrande img,
+#qrcodeGrande canvas{
+
+    display:block;
+
+    max-width:100%;
+
+    height:auto;
+
+}
+
+
+/* =========================================================
+   CHAVE
+========================================================= */
+
+#pixChave{
+
+    margin-top:11px;
+
+    max-width:340px;
+
+    color:#9aa49f;
+
+    font-size:11px;
+
+    word-break:break-all;
+
+    animation:
+        chaveEntrada .6s
+        .8s
+        both;
+
+}
+
+
+@keyframes chaveEntrada{
+
+    from{
+
+        opacity:0;
+
+    }
+
+    to{
+
+        opacity:1;
+
+    }
+
+}
+
+
+/* =========================================================
+   INSTRUÇÃO
+========================================================= */
+
+.instrucao{
+
+    margin-top:15px;
+
+    color:#68756f;
+
+    font-size:14px;
+
+    animation:
+        chaveEntrada .6s
+        .9s
+        both;
+
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+.timer{
+
+    width:330px;
+
+    max-width:90%;
+
+    margin-top:20px;
+
+    animation:
+        timerEntrada .7s
+        1s
+        both;
+
+}
+
+
+@keyframes timerEntrada{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+.timerTexto{
+
+    margin-bottom:7px;
+
+    color:#59665f;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+
+.timerBarra{
+
+    width:100%;
+
+    height:8px;
+
+    background:#e1e8e4;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+}
+
+
+.timerProgresso{
+
+    width:100%;
+
+    height:100%;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            #00a868,
+            #32c98c
+        );
+
+    border-radius:20px;
+
+    transition:
+        width 1s linear;
+
+    box-shadow:
+
+        0 0 10px
+        rgba(0,168,104,.30);
+
+}
+
+
+/* =========================================================
+   BOTÃO VOLTAR
+========================================================= */
+
+.btnFechar{
+
+    width:180px;
+
+    height:43px;
+
+    margin-top:17px;
+
+    border:
+        1px solid
+        #d9e0dd;
+
+    border-radius:12px;
+
+    background:white;
+
+    color:#5f6964;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:
+        background .25s,
+        transform .25s,
+        box-shadow .25s;
+
+    animation:
+        voltarEntrada .7s
+        1.1s
+        both;
+
+}
+
+
+@keyframes voltarEntrada{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+.btnFechar:hover{
+
+    background:#f4f6f5;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+
+        0 7px 18px
+        rgba(0,0,0,.08);
+
+}
+
+
+/* =========================================================
+   CELULAR
+========================================================= */
+
+@media(max-width:500px){
+
+    .main{
+
+        padding:14px;
+
+    }
+
+
+    .container{
+
+        padding:
+            28px
+            20px
+            24px;
+
+        border-radius:20px;
+
+    }
+
+
+    h1{
+
+        font-size:22px;
+
+    }
+
+
+    #pixValor{
+
+        font-size:29px;
+
+    }
+
+
+    #qrcodeGrande{
+
+        padding:13px;
+
+    }
+
+
+    #qrcodeGrande img,
+    #qrcodeGrande canvas{
+
+        width:270px!important;
+
+        height:270px!important;
+
+    }
+
+
+    .pixTitulo{
+
+        font-size:19px;
+
+    }
+
+
+    .timer{
+
+        width:300px;
+
+    }
+
+}
+
+
+/* =========================================================
+   CELULARES MUITO PEQUENOS
+========================================================= */
+
+@media(max-width:360px){
+
+    .container{
+
+        padding:
+            23px
+            16px
+            20px;
+
+    }
+
+
+    .logo{
+
+        width:52px;
+        height:52px;
+
+    }
+
+
+    h1{
+
+        font-size:20px;
+
+    }
+
+
+    #qrcodeGrande img,
+    #qrcodeGrande canvas{
+
+        width:235px!important;
+
+        height:235px!important;
+
+    }
+
+
+    #pixValor{
+
+        font-size:26px;
+
+    }
+
+
+    .pixTitulo{
+
+        font-size:17px;
+
+    }
+
+}
+
+
+/* =========================================================
+   REDUZIR ANIMAÇÕES SE O CELULAR PEDIR
+========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+
+        animation-duration:.01ms!important;
+
+        animation-iteration-count:1!important;
+
+        scroll-behavior:auto!important;
+
+        transition-duration:.01ms!important;
+
+    }
+
+}
+
 </style>
+
 </head>
-<link rel="icon" type="image/png" href="/Gemini_Generated_Image_wd165bwd165bwd16-removebg-preview.png">
+
+
+<link
+    rel="icon"
+    type="image/png"
+    href="/Gemini_Generated_Image_wd165bwd165bwd16-removebg-preview.png"
+>
+
 
 <body>
-<div class="background"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+
+
+<!-- ======================================================
+     FUNDO
+====================================================== -->
+
+<div class="background">
+
+    <div class="orb"></div>
+
+    <div class="orb"></div>
+
+    <div class="orb"></div>
+
+</div>
+
+
+
+<!-- ======================================================
+     TELA PRINCIPAL
+====================================================== -->
 
 <main class="main">
+
 <div class="container">
-<div class="logo">PIX</div>
-<h1>Marinas Mercado</h1>
-<br>
 
-<div class="bank-card selecionado" onclick="selecionarChave(this)">
-<div class="selected-check">✓</div>
-<div class="bank-top">
-<div class="bank-icon">PIX</div>
-<div>
-<div class="bank-name">Banco Infinity</div>
-<div class="bank-status">Instituição selecionada</div>
-</div>
-</div>
+
+    <div class="logo">
+
+        PIX
+
+    </div>
+
+
+    <h1>
+
+        Marinas Mercado
+
+    </h1>
+
+
+    <br>
+
+
+
+    <!-- ==================================================
+         STONE
+    =================================================== -->
+
+    <div
+        class="bank-card selecionado"
+        onclick="selecionarChave(this)"
+    >
+
+        <div class="selected-check">
+
+            ✓
+
+        </div>
+
+
+        <div class="bank-top">
+
+
+            <div class="bank-icon">
+
+                PIX
+
+            </div>
+
+
+            <div>
+
+                <div class="bank-name">
+
+                    Stone
+
+                </div>
+
+
+                <div class="bank-status">
+
+                    Instituição selecionada
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==================================================
+         VALOR
+    =================================================== -->
+
+    <div class="field">
+
+
+        <label for="valor">
+
+            Valor do pagamento
+
+        </label>
+
+
+        <input
+            id="valor"
+            placeholder="R$ 0,00"
+            inputmode="decimal"
+            autocomplete="off"
+        >
+
+
+    </div>
+
+
+
+    <!-- ==================================================
+         BOTÃO
+    =================================================== -->
+
+    <button
+        class="generate"
+        onclick="gerarPix()"
+    >
+
+        Gerar PIX
+
+    </button>
+
+
+    <div
+        class="mensagem"
+        id="mensagem"
+    >
+
+        Stone selecionada ✓
+
+    </div>
+
+
 </div>
 
-<div class="field">
-<label for="valor">Valor do pagamento</label>
-<input id="valor" placeholder="R$ 0,00" inputmode="decimal" autocomplete="off">
-</div>
-
-<button class="generate" onclick="gerarPix()">Gerar PIX</button>
-<div class="mensagem" id="mensagem">Banco Infinity selecionado ✓</div>
-</div>
 </main>
 
+
+
+<!-- ======================================================
+     TELA DO PIX
+====================================================== -->
+
 <div id="telaPix">
-<div class="pix-badge"><span>●</span> Pagamento PIX</div>
-<div class="pixTitulo">Aponte a câmera para o QR Code</div>
-<div id="pixBanco">PIX • Banco Infinity</div>
-<div id="pixValor">R$ 0,00</div>
-<div id="qrcodeGrande"></div>
-<div id="pixChave"></div>
-<div class="instrucao">Escaneie o QR Code para realizar o pagamento</div>
 
-<div class="timer">
-<div class="timerTexto" id="timerTexto">PIX disponível por 2:00</div>
-<div class="timerBarra"><div class="timerProgresso" id="timerProgresso"></div></div>
+
+    <div class="pix-badge">
+
+        <span>●</span>
+
+        Pagamento PIX
+
+    </div>
+
+
+
+    <div class="pixTitulo">
+
+        Aponte a câmera para o QR Code
+
+    </div>
+
+
+
+    <div id="pixBanco">
+
+        PIX • Stone
+
+    </div>
+
+
+
+    <div id="pixValor">
+
+        R$ 0,00
+
+    </div>
+
+
+
+    <div id="qrcodeGrande"></div>
+
+
+
+    <div id="pixChave"></div>
+
+
+
+    <div class="instrucao">
+
+        Escaneie o QR Code para realizar o pagamento
+
+    </div>
+
+
+
+    <!-- ==================================================
+         TIMER
+    =================================================== -->
+
+    <div class="timer">
+
+
+        <div
+            class="timerTexto"
+            id="timerTexto"
+        >
+
+            PIX disponível por 2:00
+
+        </div>
+
+
+        <div class="timerBarra">
+
+            <div
+                class="timerProgresso"
+                id="timerProgresso"
+            ></div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <button
+        class="btnFechar"
+        onclick="resetarPix()"
+    >
+
+        Voltar
+
+    </button>
+
+
 </div>
 
-<button class="btnFechar" onclick="resetarPix()">Voltar</button>
-</div>
+
 
 <script>
-const CHAVE_PIX = "81985533300";
-const CHAVE_PIX_FORMATADA = "+5581985533300";
-const NOME_RECEBEDOR = "MARINAS MERCADO";
-const TEMPO_PIX = 120;
 
-let tempoRestante = TEMPO_PIX;
-let timer = null;
 
-document.addEventListener("keydown", function(event){
-    if(event.key === "Enter"){
-        const telaPix = document.getElementById("telaPix");
-        if(telaPix.style.display !== "flex") gerarPix();
+/* =========================================================
+   CONFIGURAÇÃO PIX
+========================================================= */
+
+
+/*
+    CHAVE PIX ALEATÓRIA
+*/
+
+const CHAVE_PIX =
+    "57cff789-7e57-44f7-a008-2b403c1ff8db";
+
+
+/*
+    NOME DO RECEBEDOR
+*/
+
+const NOME_RECEBEDOR =
+    "MARINAS MERCADO";
+
+
+/*
+    TEMPO DO QR CODE
+    120 segundos = 2 minutos
+*/
+
+const TEMPO_PIX =
+    120;
+
+
+
+/* =========================================================
+   VARIÁVEIS
+========================================================= */
+
+let tempoRestante =
+    TEMPO_PIX;
+
+
+let timer =
+    null;
+
+
+
+/* =========================================================
+   ENTER GERA O PIX
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            const telaPix =
+                document.getElementById(
+                    "telaPix"
+                );
+
+
+            if(
+                telaPix.style.display !== "flex"
+            ){
+
+                gerarPix();
+
+            }
+
+        }
+
     }
-});
+);
+
+
+
+/* =========================================================
+   SELECIONAR STONE
+========================================================= */
 
 function selecionarChave(elemento){
-    document.querySelectorAll(".bank-card").forEach(card => card.classList.remove("selecionado"));
-    elemento.classList.add("selecionado");
-    document.getElementById("mensagem").innerText = "Banco Infinity selecionado ✓";
+
+
+    document
+        .querySelectorAll(".bank-card")
+        .forEach(
+            card =>
+                card.classList.remove(
+                    "selecionado"
+                )
+        );
+
+
+    elemento.classList.add(
+        "selecionado"
+    );
+
+
+    document.getElementById(
+        "mensagem"
+    ).innerText =
+        "Stone selecionada ✓";
+
 }
 
-const valorInput = document.getElementById("valor");
 
-valorInput.addEventListener("input", function(){
-    let numeros = valorInput.value.replace(/\D/g,"");
 
-    if(numeros.length === 0){
-        valorInput.value = "";
-        return;
+/* =========================================================
+   FORMATAÇÃO DO VALOR
+========================================================= */
+
+const valorInput =
+    document.getElementById(
+        "valor"
+    );
+
+
+valorInput.addEventListener(
+    "input",
+    function(){
+
+
+        let numeros =
+            valorInput.value.replace(
+                /\D/g,
+                ""
+            );
+
+
+        if(
+            numeros.length === 0
+        ){
+
+            valorInput.value =
+                "";
+
+            return;
+
+        }
+
+
+        let valor =
+            (
+                parseInt(numeros)
+                /
+                100
+            ).toFixed(2);
+
+
+        valor =
+            valor.replace(
+                ".",
+                ","
+            );
+
+
+        valor =
+            valor.replace(
+                /\B(?=(\d{3})+(?!\d))/g,
+                "."
+            );
+
+
+        valorInput.value =
+            "R$ " + valor;
+
     }
+);
 
-    let valor = (parseInt(numeros) / 100).toFixed(2);
-    valor = valor.replace(".",",");
-    valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g,".");
-    valorInput.value = "R$ " + valor;
-});
 
-function campo(id, valor){
-    const tamanho = valor.length.toString().padStart(2,"0");
-    return id + tamanho + valor;
+
+/* =========================================================
+   CAMPO TLV
+========================================================= */
+
+function campo(
+    id,
+    valor
+){
+
+    const tamanho =
+        valor.length
+            .toString()
+            .padStart(
+                2,
+                "0"
+            );
+
+
+    return (
+        id +
+        tamanho +
+        valor
+    );
+
 }
+
+
+
+/* =========================================================
+   CRC16
+========================================================= */
 
 function crc16(payload){
-    const polinomio = 0x1021;
-    let resultado = 0xFFFF;
 
-    for(let i=0;i<payload.length;i++){
-        resultado ^= payload.charCodeAt(i) << 8;
+    const polinomio =
+        0x1021;
 
-        for(let j=0;j<8;j++){
-            resultado = (resultado & 0x8000)
-                ? (resultado << 1) ^ polinomio
-                : resultado << 1;
 
-            resultado &= 0xFFFF;
+    let resultado =
+        0xFFFF;
+
+
+    for(
+        let i = 0;
+        i < payload.length;
+        i++
+    ){
+
+
+        resultado ^=
+            payload.charCodeAt(i)
+            << 8;
+
+
+        for(
+            let j = 0;
+            j < 8;
+            j++
+        ){
+
+
+            resultado =
+
+                (
+                    resultado &
+                    0x8000
+                )
+
+                ?
+
+                (
+                    resultado << 1
+                )
+                ^
+                polinomio
+
+                :
+
+                resultado << 1;
+
+
+            resultado &=
+                0xFFFF;
+
         }
+
     }
 
-    return resultado.toString(16).toUpperCase().padStart(4,"0");
+
+    return resultado
+        .toString(16)
+        .toUpperCase()
+        .padStart(
+            4,
+            "0"
+        );
+
 }
+
+
+
+/* =========================================================
+   GERAR PIX
+========================================================= */
 
 function gerarPix(){
 
-    let valor = valorInput.value
-        .replace("R$","")
-        .replace(/\./g,"")
-        .replace(",",".")
-        .trim();
 
-    if(!valor || parseFloat(valor) <= 0){
-        alert("Digite um valor válido.");
+    let valor =
+        valorInput.value
+
+            .replace(
+                "R$",
+                ""
+            )
+
+            .replace(
+                /\./g,
+                ""
+            )
+
+            .replace(
+                ",",
+                "."
+            )
+
+            .trim();
+
+
+
+    /* validação */
+
+    if(
+        !valor ||
+        parseFloat(valor) <= 0
+    ){
+
+        alert(
+            "Digite um valor válido."
+        );
+
+
         valorInput.focus();
+
+
         return;
+
     }
 
+
+
+    /* =====================================================
+       CHAVE PIX ALEATÓRIA
+    ===================================================== */
+
     const chavePix =
-        campo("00","BR.GOV.BCB.PIX") +
-        campo("01",CHAVE_PIX_FORMATADA);
 
-    let payload = "";
+        campo(
+            "00",
+            "BR.GOV.BCB.PIX"
+        )
 
-    payload += "000201";
-    payload += campo("26",chavePix);
-    payload += "52040000";
-    payload += "5303986";
-    payload += campo("54",valor);
-    payload += "5802BR";
-    payload += campo("59",NOME_RECEBEDOR);
-    payload += campo("60","***");
-    payload += "62070503***";
-    payload += "6304";
-    payload += crc16(payload);
+        +
 
-    document.getElementById("pixBanco").innerText = "PIX • Banco Infinity";
-    document.getElementById("pixValor").innerText = valorInput.value;
-    document.getElementById("pixChave").innerText = "Chave: " + CHAVE_PIX;
+        campo(
+            "01",
+            CHAVE_PIX
+        );
 
-    const qr = document.getElementById("qrcodeGrande");
-    qr.innerHTML = "";
 
-    new QRCode(qr,{
-        text:payload,
-        width:300,
-        height:300,
-        correctLevel:QRCode.CorrectLevel.M
-    });
 
-    document.getElementById("telaPix").style.display = "flex";
+    /* =====================================================
+       PAYLOAD
+    ===================================================== */
+
+    let payload =
+        "";
+
+
+    payload +=
+        "000201";
+
+
+    payload +=
+        campo(
+            "26",
+            chavePix
+        );
+
+
+    payload +=
+        "52040000";
+
+
+    payload +=
+        "5303986";
+
+
+    payload +=
+        campo(
+            "54",
+            valor
+        );
+
+
+    payload +=
+        "5802BR";
+
+
+    payload +=
+        campo(
+            "59",
+            NOME_RECEBEDOR
+        );
+
+
+    payload +=
+        campo(
+            "60",
+            "***"
+        );
+
+
+    payload +=
+        "62070503***";
+
+
+    payload +=
+        "6304";
+
+
+    payload +=
+        crc16(payload);
+
+
+
+    /* =====================================================
+       ATUALIZAR TELA
+    ===================================================== */
+
+    document.getElementById(
+        "pixBanco"
+    ).innerText =
+        "PIX • Stone";
+
+
+    document.getElementById(
+        "pixValor"
+    ).innerText =
+        valorInput.value;
+
+
+    document.getElementById(
+        "pixChave"
+    ).innerText =
+        "Chave: " +
+        CHAVE_PIX;
+
+
+
+    /* =====================================================
+       QR CODE
+    ===================================================== */
+
+    const qr =
+        document.getElementById(
+            "qrcodeGrande"
+        );
+
+
+    qr.innerHTML =
+        "";
+
+
+    new QRCode(
+        qr,
+        {
+
+            text:
+                payload,
+
+            width:
+                300,
+
+            height:
+                300,
+
+            correctLevel:
+                QRCode.CorrectLevel.M
+
+        }
+    );
+
+
+
+    /* =====================================================
+       ABRIR TELA
+    ===================================================== */
+
+    document.getElementById(
+        "telaPix"
+    ).style.display =
+        "flex";
+
+
     iniciarTimer();
+
 }
 
-function formatarTempo(segundos){
-    const minutos = Math.floor(segundos / 60);
-    const segundosRestantes = segundos % 60;
 
-    return minutos + ":" + segundosRestantes.toString().padStart(2,"0");
+
+/* =========================================================
+   FORMATAR TEMPO
+========================================================= */
+
+function formatarTempo(
+    segundos
+){
+
+    const minutos =
+        Math.floor(
+            segundos / 60
+        );
+
+
+    const segundosRestantes =
+        segundos % 60;
+
+
+    return (
+
+        minutos +
+
+        ":" +
+
+        segundosRestantes
+            .toString()
+            .padStart(
+                2,
+                "0"
+            )
+
+    );
+
 }
+
+
+
+/* =========================================================
+   TIMER
+========================================================= */
 
 function iniciarTimer(){
 
-    clearInterval(timer);
 
-    tempoRestante = TEMPO_PIX;
+    clearInterval(
+        timer
+    );
 
-    const texto = document.getElementById("timerTexto");
-    const progresso = document.getElementById("timerProgresso");
 
-    progresso.style.width = "100%";
-    texto.innerText = "PIX disponível por " + formatarTempo(tempoRestante);
+    tempoRestante =
+        TEMPO_PIX;
 
-    timer = setInterval(function(){
 
-        tempoRestante--;
+    const texto =
+        document.getElementById(
+            "timerTexto"
+        );
 
-        if(tempoRestante <= 0){
 
-            clearInterval(timer);
+    const progresso =
+        document.getElementById(
+            "timerProgresso"
+        );
 
-            texto.innerText = "PIX expirado";
-            progresso.style.width = "0%";
 
-            setTimeout(function(){
-                resetarPix();
-            },500);
+    progresso.style.width =
+        "100%";
 
-            return;
-        }
 
-        texto.innerText =
-            "PIX disponível por " +
-            formatarTempo(tempoRestante);
+    texto.innerText =
 
-        progresso.style.width =
-            (tempoRestante / TEMPO_PIX * 100) + "%";
+        "PIX disponível por " +
 
-    },1000);
+        formatarTempo(
+            tempoRestante
+        );
+
+
+
+    timer =
+
+        setInterval(
+            function(){
+
+
+                tempoRestante--;
+
+
+
+                /* =================================================
+                   PIX EXPIRADO
+                ================================================== */
+
+                if(
+                    tempoRestante <= 0
+                ){
+
+
+                    clearInterval(
+                        timer
+                    );
+
+
+                    texto.innerText =
+                        "PIX expirado";
+
+
+                    progresso.style.width =
+                        "0%";
+
+
+                    setTimeout(
+                        function(){
+
+                            resetarPix();
+
+                        },
+                        500
+                    );
+
+
+                    return;
+
+                }
+
+
+
+                /* =================================================
+                   ATUALIZAR TIMER
+                ================================================== */
+
+                texto.innerText =
+
+                    "PIX disponível por " +
+
+                    formatarTempo(
+                        tempoRestante
+                    );
+
+
+                progresso.style.width =
+
+                    (
+                        tempoRestante
+                        /
+                        TEMPO_PIX
+                        *
+                        100
+                    ) +
+
+                    "%";
+
+
+            },
+
+            1000
+
+        );
+
 }
+
+
+
+/* =========================================================
+   RESETAR PIX
+========================================================= */
 
 function resetarPix(){
 
-    clearInterval(timer);
 
-    document.getElementById("telaPix").style.display = "none";
-    document.getElementById("qrcodeGrande").innerHTML = "";
-    document.getElementById("pixChave").innerText = "";
-    document.getElementById("valor").value = "";
-    document.getElementById("timerProgresso").style.width = "100%";
-    document.getElementById("timerTexto").innerText = "PIX disponível por 2:00";
+    clearInterval(
+        timer
+    );
 
-    tempoRestante = TEMPO_PIX;
+
+    document.getElementById(
+        "telaPix"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "qrcodeGrande"
+    ).innerHTML =
+        "";
+
+
+    document.getElementById(
+        "pixChave"
+    ).innerText =
+        "";
+
+
+    document.getElementById(
+        "valor"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "timerProgresso"
+    ).style.width =
+        "100%";
+
+
+    document.getElementById(
+        "timerTexto"
+    ).innerText =
+        "PIX disponível por 2:00";
+
+
+    tempoRestante =
+        TEMPO_PIX;
+
 }
+
+
 </script>
+
 </body>
+
 </html>
